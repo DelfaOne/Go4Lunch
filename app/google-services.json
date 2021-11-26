@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "495309194342",
+    "project_id": "go4lunch-3d11c",
+    "storage_bucket": "go4lunch-3d11c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495309194342:android:7b2764a9f5701e3dd5d9a7",
+        "android_client_info": {
+          "package_name": "com.fadel.go4lunch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "495309194342-kufu5v6o4ohdfu1ihsrrhku3li5ars6p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2Ty2STMOD5Bbri7Spi67-vFN79WA2PbY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "495309194342-kufu5v6o4ohdfu1ihsrrhku3li5ars6p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
