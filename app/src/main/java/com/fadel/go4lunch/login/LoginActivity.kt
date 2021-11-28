@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.fadel.go4lunch.MainActivity
+import com.fadel.go4lunch.HostActivity
 import com.fadel.go4lunch.R
 import com.fadel.go4lunch.databinding.ActivityLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -39,7 +39,7 @@ class LoginActivity : AppCompatActivity() {
         Handler().postDelayed(
             {
                 if (user != null) {
-                    val mainActivityIntent = Intent(this, MainActivity::class.java)
+                    val mainActivityIntent = Intent(this, HostActivity::class.java)
                     startActivity(mainActivityIntent)
                 }
             }, 2000
@@ -90,7 +90,7 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
-                    val intent = Intent(this, MainActivity::class.java)
+                    val intent = Intent(this, HostActivity::class.java)
                     startActivity(intent)
                 } else {
                     // If sign in fails, display a message to the user.
