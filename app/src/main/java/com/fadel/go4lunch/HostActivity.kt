@@ -9,7 +9,9 @@ import androidx.navigation.ui.setupWithNavController
 import com.fadel.go4lunch.databinding.ActivityHostBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HostActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHostBinding
@@ -40,8 +42,8 @@ class HostActivity : AppCompatActivity() {
          }
      }*/
 
-    private fun logout() {
+    /*private fun logout() {
         FirebaseAuth.getInstance().signOut();
-    }
+    }*/
 
 }

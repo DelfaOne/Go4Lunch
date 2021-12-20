@@ -1,4 +1,4 @@
-package com.fadel.go4lunch.ui.map
+package com.fadel.go4lunch.ui.list
 
 import android.os.Bundle
 import android.view.LayoutInflater
