@@ -14,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HostActivity : AppCompatActivity() {
 
+    private val viewModel: Any
     private lateinit var binding: ActivityHostBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +35,11 @@ class HostActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.onResume()
     }
 
     /* private fun initializeUI() {

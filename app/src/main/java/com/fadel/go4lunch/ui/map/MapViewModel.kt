@@ -38,7 +38,7 @@ class MapViewModel @Inject constructor(
                     )
                 )
             }.collect { responses ->
-                responses?.let { list -> //TODO if statement
+                responses?.let { list ->
                     emit(list?.mapNotNull {
                         MapUiModel(
                             id = it.placeId ?: return@mapNotNull null,

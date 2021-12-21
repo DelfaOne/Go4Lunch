@@ -5,10 +5,10 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.core.app.ActivityCompat
-import com.fadel.go4lunch.databinding.FragmentMapBinding
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -18,36 +18,52 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MapFragment : SupportMapFragment() {
 
-    private lateinit var binding: FragmentMapBinding
+    private val vm by viewModels<MapViewModel>()
 
+    private val callback = OnMapReadyCallback { googleMap: GoogleMap ->
+        googleMap.uiSettings.isMyLocationButtonEnabled = true
 
-
-
-    private val callback = OnMapReadyCallback { googleMap ->
         val sydney = LatLng(-34.0, 151.0)
         googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
 
-        googleMap.uiSettings.isCompassEnabled
-    }
-
-    /*override fun getMapAsync(callback: OnMapReadyCallback) {
-        super.getMapAsync(callback)
-    }*/
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        //TODO inflate my layout to access floating button
-
+        setupObservers(googleMap)
 
     }
-
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getMapAsync(callback)
+
     }
+
+
+    private fun setupObservers(googleMap: GoogleMap) {
+        vm.restaurantListLiveData.observe(viewLifecycleOwner) {
+            //TODO add markers
+        }
+    }
+
+    private fun getLocationPermission() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            == PackageManager.PERMISSION_GRANTED
+        ) {
+            //TODO
+        } else {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
+    }
+
 
     companion object {
         fun newInstance(value: String): MapFragment {
