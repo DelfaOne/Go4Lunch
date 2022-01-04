@@ -1,6 +1,7 @@
 package com.fadel.go4lunch
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -14,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HostActivity : AppCompatActivity() {
 
-    private val viewModel: Any
+    private val vm by viewModels<HostActivityViewModel>()
     private lateinit var binding: ActivityHostBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +40,7 @@ class HostActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.onResume()
+        vm.onResume()
     }
 
     /* private fun initializeUI() {

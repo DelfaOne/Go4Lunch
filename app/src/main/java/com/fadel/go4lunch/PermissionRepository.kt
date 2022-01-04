@@ -1,21 +1,20 @@
 package com.fadel.go4lunch
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PermissionRepository @Inject constructor(){
+class PermissionRepository @Inject constructor() {
 
-    private val permissionsListMutableStateFlow = MutableStateFlow(mutableListOf<String>())
-    val permissionListFlow: Flow<List<String>> = permissionsListMutableStateFlow.asStateFlow()
+    private val permissionsListMutableStateFlow = MutableSharedFlow<List<String>>(1).apply {
+        tryEmit(emptyList())
+    }
+    val permissionListFlow: Flow<List<String>> = permissionsListMutableStateFlow.asSharedFlow()
 
     fun updatePermission(permissionList: List<String>) {
-        permissionsListMutableStateFlow.value = permissionsListMutableStateFlow.value.apply {
-            clear()
-            addAll(permissionList)
-        }
+        permissionsListMutableStateFlow.tryEmit(permissionList)
     }
 }

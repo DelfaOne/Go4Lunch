@@ -25,4 +25,6 @@ class NearbyPlacesRepo @Inject constructor(
         }
         return result?.results?.filterNotNull()
     }
+
+    //Test nominalcase / exception -> null / result is null / result with null
 }

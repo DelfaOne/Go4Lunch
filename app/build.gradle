@@ -121,17 +121,15 @@ dependencies {
     implementation "com.google.dagger:hilt-android:2.38.1"
     kapt "com.google.dagger:hilt-compiler:2.38.1"
 
-    def room_version = "2.3.0"
-
-    implementation "androidx.room:room-runtime:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_version"
-
-    // optional - Test helpers
-    testImplementation "androidx.room:room-testing:$room_version"
-
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
 
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
     implementation "com.squareup.okhttp3:logging-interceptor:4.9.0"
     implementation "com.google.code.gson:gson:2.8.8"
+
+    //TESTS
+    testImplementation 'junit:junit:4.13.2' // Assertions... and stuff
+    testImplementation 'android.arch.core:core-testing:1.1.1' // LiveData tools for Unit Testing
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0'
+    testImplementation "io.mockk:mockk:1.12.1"
 }
