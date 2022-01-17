@@ -23,13 +23,12 @@ class LocationRepository @Inject constructor(
 
         // 1. Create callback and add elements into the flow
         val callback = object : LocationCallback() {
-            override fun onLocationResult(result: LocationResult?) {
+            override fun onLocationResult(result: LocationResult) {
                 result?.let {
                     trySend(it.lastLocation)
                 }
             }
         }
-
         // 2. Register the callback to get location updates by calling requestLocationUpdates
         fusedLocationProviderClient.requestLocationUpdates(
             LocationRequest.create().setSmallestDisplacement(50F).setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setFastestInterval(30_000),

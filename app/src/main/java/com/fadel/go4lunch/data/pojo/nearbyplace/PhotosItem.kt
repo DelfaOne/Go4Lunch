@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class PhotosItem(
 
-    @field:SerializedName("photo_reference")
+    @SerializedName("photo_reference")
     val photoReference: String? = null,
 
     @field:SerializedName("width")

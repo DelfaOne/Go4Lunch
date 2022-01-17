@@ -3,15 +3,31 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/compose-model-1641320283565.xml" value="0.20945945945945946" />
+        <entry key="../../../../layout/compose-model-1641320382731.xml" value="0.31830659850344195" />
+        <entry key="../../../../layout/compose-model-1641323358897.xml" value="0.4513552545606673" />
+        <entry key="../../../../layout/compose-model-1641325072841.xml" value="0.31692403092819404" />
+        <entry key="../../../../layout/compose-model-1641779372309.xml" value="0.32559121621621623" />
+        <entry key="../../../../layout/compose-model-1641805733540.xml" value="0.31503378378378377" />
+        <entry key="../../../../layout/compose-model-1641838735915.xml" value="0.4583333333333333" />
+        <entry key="../../../../layout/compose-model-1641841696581.xml" value="0.2712962962962963" />
+        <entry key="../../../../layout/compose-model-1641895842199.xml" value="0.2470703125" />
+        <entry key="../../../../layout/compose-model-1642247713224.xml" value="0.1" />
+        <entry key="../../../../layout/compose-model-1642250865065.xml" value="0.24951171875" />
+        <entry key="../../../../layout/compose-model-1642343263785.xml" value="0.36574074074074076" />
+        <entry key="../../../../layout/compose-model-1642350664054.xml" value="0.36574074074074076" />
+        <entry key="../../.gradle/caches/transforms-3/6df8c2a40b2ba565b90d9da7a42b400b/transformed/jetified-firebase-ui-auth-7.2.0/res/drawable/fui_idp_button_background_github.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/ic_baseline_map_24.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/ic_baseline_people_24.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/ic_baseline_view_list_24.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.2" />
+        <entry key="app/src/main/res/font/roboto.xml" value="0.2916666666666667" />
         <entry key="app/src/main/res/layout/activity_host.xml" value="0.1691995947315096" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.3499780182570752" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.17933130699088146" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.15942028985507245" />
+        <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.3619791666666667" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.182518115942029" />
         <entry key="app/src/main/res/layout/fragment_list.xml" value="0.1933876811594203" />
         <entry key="app/src/main/res/layout/fragment_map.xml" value="0.1691995947315096" />
