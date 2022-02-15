@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
+import coil.transform.CircleCropTransformation
 import com.fadel.go4lunch.R
 import com.fadel.go4lunch.ui.list.ListViewModel.Companion.apiKey
 import com.fadel.go4lunch.ui.list.RestaurantsItemUiModel
@@ -103,22 +104,23 @@ fun restaurantListItem(
                 }
                 Image(
                     painter = rememberImagePainter(
-                        data = photo(restaurantsItemUiModel)
+                        data = photo(restaurantsItemUiModel),
+                        builder = {
+                            transformations(CircleCropTransformation())
+                        }
                     ),
-                    contentDescription = "Android Logo",
+                    contentDescription = "Restaurant image",
                     modifier = modifier
                         .weight(1f)
-                        .size(25.dp)
+                        .size(60.dp)
                 )
             }
         }
     }
 }
 
-private fun photo(restaurantsItemUiModel: RestaurantsItemUiModel): String {
-    Log.d("Restaurant", "photo() called with: restaurantsItemUiModel = $restaurantsItemUiModel")
+fun photo(restaurantsItemUiModel: RestaurantsItemUiModel): String {
     return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${restaurantsItemUiModel.photo}&key=$apiKey".also {
-        Log.d("Restaurant2", "photo() called $it")
     }
 
 }

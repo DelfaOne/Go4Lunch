@@ -16,7 +16,7 @@ import com.fadel.go4lunch.ui.list.RestaurantsItemUiModel
 @Preview(showBackground = true)
 @Composable
 fun RestaurantListPreview() {
-    /*restaurantList(
+    restaurantList(
         List(10) {
             RestaurantsItemUiModel(
                 "Nom du restaurant",
@@ -30,14 +30,15 @@ fun RestaurantListPreview() {
             )
         },
         Modifier,
-    )*/
+        null
+    )
 }
 
 @Composable
 fun restaurantList(
     restaurantsItemUiModels: List<RestaurantsItemUiModel>,
     modifier: Modifier,
-    navHostController: NavHostController
+    navHostController: NavHostController?
 ) {
     Box(modifier) {
         LazyColumn(
@@ -53,7 +54,7 @@ fun restaurantList(
                         it
                     ) {
                         //it.onItemClicked?.invoke(it.name)
-                        navHostController.navigate(ListFragment.Routes.DetailFragment.route + "/${it.name}" + "/${it.address}" + "/${it.numberOfStars}")
+                        navHostController?.navigate(ListFragment.Routes.DetailFragment.route + "/${it.name}" + "/${it.address}" + "/${it.numberOfStars}" + "/${it.photo}")
                     }
                 }
             }

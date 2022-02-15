@@ -51,7 +51,7 @@ class ListViewModel @Inject constructor(
                             },
                             distance = "120", //TODO calcul de la distance
                             interestNumber = "3", //TODO from firestore ?
-                            numberOfStars = (it.rating ?: 0.0) * 3 / 5,
+                            numberOfStars = (it.rating ?: 0.0),
                             onItemClicked = {
                                 navigationOrder.value = NavigationOrder.Detail
                             },

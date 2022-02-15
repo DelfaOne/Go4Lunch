@@ -69,14 +69,15 @@ class ListFragment : Fragment() {
                 restaurantList(restaurantsItemUiModels = list, modifier = Modifier, navHostController = navController)
             }
 
-            composable(Routes.DetailFragment.route + "/{name}" + "/{address}" + "/{numberOfStars}") {
+            composable(Routes.DetailFragment.route + "/{name}" + "/{address}" + "/{numberOfStars}" + "/{urlPicture}") {
 
                 val name = it.arguments?.getString("name")
                 val address = it.arguments?.getString("address")
                 val numberOfStars = it.arguments?.getFloat("numberOfStars")
+                val picture = it.arguments?.getString("urlPicture")
                 // Lay down the DetailScreen Composable
                 // and pass the navController
-                DetailScreen(name, address, numberOfStars)
+                DetailScreen(name, address, numberOfStars, picture)
             }
 
 

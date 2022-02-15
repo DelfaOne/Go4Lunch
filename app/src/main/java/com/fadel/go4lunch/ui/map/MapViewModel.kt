@@ -1,12 +1,15 @@
 package com.fadel.go4lunch.ui.map
 
 import android.Manifest
+import android.util.Log
 import androidx.lifecycle.*
 import com.fadel.go4lunch.PermissionRepository
 import com.fadel.go4lunch.data.repository.LocationRepository
 import com.fadel.go4lunch.data.repository.NearbyPlacesRepo
 import com.fadel.go4lunch.utils.DispatcherProvider
 import com.fadel.go4lunch.utils.SingleLiveEvent
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -20,6 +23,10 @@ class MapViewModel @Inject constructor(
     private val permissionRepository: PermissionRepository,
     dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
+
+    init {
+        firestoreTests()
+    }
 
     val restaurantListLiveData: LiveData<List<MapUiModel>> =
         liveData(dispatcherProvider.ioDispatcher) {
@@ -84,4 +91,44 @@ class MapViewModel @Inject constructor(
         data class ZoomTo(val lat: Double, val long: Double) : MapViewActions()
     }
 
+    fun firestoreTests() {
+        val database = Firebase.firestore
+
+        val user = hashMapOf(
+            "first" to "Ada",
+            "last" to "Lovelace",
+            "born" to 1815
+        )
+
+        database.collection("users")
+            .add(user)
+            .addOnSuccessListener { documentReference ->
+                Log.d("Success", "DocumentSnapshot added with ID: ${documentReference.id}")
+            }
+            .addOnFailureListener { e ->
+                Log.w("Failure", "Error adding document", e)
+            }
+
+        // Create a new user with a first, middle, and last name
+        val secondUser = hashMapOf(
+            "first" to "Alan",
+            "middle" to "Mathison",
+            "last" to "Turing",
+            "born" to 1912
+        )
+
+// Add a new document with a generated ID
+        database.collection("users")
+            .add(user)
+            .addOnSuccessListener { documentReference ->
+                Log.d("Success", "DocumentSnapshot added with ID: ${documentReference.id}")
+            }
+            .addOnFailureListener { e ->
+                Log.w("Failure", "Error adding document", e)
+            }
+
+    }
 }
+
+
+
