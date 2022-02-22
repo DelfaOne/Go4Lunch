@@ -53,7 +53,7 @@ fun RestaurantListItemPreview() {
 fun restaurantListItem(
     modifier: Modifier,
     restaurantsItemUiModel: RestaurantsItemUiModel,
-    onClick: () -> Unit,
+    onClick: () -> Unit
 ) {
     Card(
         shape = MaterialTheme.shapes.small,

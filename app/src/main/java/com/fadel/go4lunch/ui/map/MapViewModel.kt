@@ -24,10 +24,6 @@ class MapViewModel @Inject constructor(
     dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
-    init {
-        firestoreTests()
-    }
-
     val restaurantListLiveData: LiveData<List<MapUiModel>> =
         liveData(dispatcherProvider.ioDispatcher) {
             permissionRepository.permissionListFlow.collectLatest { permissions ->
@@ -65,7 +61,7 @@ class MapViewModel @Inject constructor(
     val viewActionSingleLiveEvent = SingleLiveEvent<MapViewActions>()
 
     init {
-        viewModelScope.launch(dispatcherProvider.ioDispatcher) {
+        viewModelScope.launch {
             permissionRepository.permissionListFlow.collect { permissions ->
                 if (
                     !permissions.contains(Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -77,7 +73,7 @@ class MapViewModel @Inject constructor(
             }
         }
 
-        viewModelScope.launch(dispatcherProvider.ioDispatcher) {
+        viewModelScope.launch {
             val position = locationRepository.getLocationFlow().first()
             withContext(dispatcherProvider.mainDispatcher) { //Back to main thread
                 viewActionSingleLiveEvent.value =
@@ -91,43 +87,6 @@ class MapViewModel @Inject constructor(
         data class ZoomTo(val lat: Double, val long: Double) : MapViewActions()
     }
 
-    fun firestoreTests() {
-        val database = Firebase.firestore
-
-        val user = hashMapOf(
-            "first" to "Ada",
-            "last" to "Lovelace",
-            "born" to 1815
-        )
-
-        database.collection("users")
-            .add(user)
-            .addOnSuccessListener { documentReference ->
-                Log.d("Success", "DocumentSnapshot added with ID: ${documentReference.id}")
-            }
-            .addOnFailureListener { e ->
-                Log.w("Failure", "Error adding document", e)
-            }
-
-        // Create a new user with a first, middle, and last name
-        val secondUser = hashMapOf(
-            "first" to "Alan",
-            "middle" to "Mathison",
-            "last" to "Turing",
-            "born" to 1912
-        )
-
-// Add a new document with a generated ID
-        database.collection("users")
-            .add(user)
-            .addOnSuccessListener { documentReference ->
-                Log.d("Success", "DocumentSnapshot added with ID: ${documentReference.id}")
-            }
-            .addOnFailureListener { e ->
-                Log.w("Failure", "Error adding document", e)
-            }
-
-    }
 }
 
 

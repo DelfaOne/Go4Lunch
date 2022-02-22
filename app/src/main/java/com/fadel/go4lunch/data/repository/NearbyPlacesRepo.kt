@@ -2,6 +2,7 @@ package com.fadel.go4lunch.data.repository
 
 import com.fadel.go4lunch.data.datasource.NearbyPlacesDataSource
 import com.fadel.go4lunch.data.pojo.nearbyplace.NearbyResponse
+import com.fadel.go4lunch.data.pojo.nearbyplace.details.DetailResponse
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,6 +25,19 @@ class NearbyPlacesRepo @Inject constructor(
             null
         }
         return result?.results?.filterNotNull()
+    }
+
+    suspend fun getDetailResult(
+        placeId: String,
+        key: String
+    ): DetailResponse {
+        val result = try {
+            nearbyPlaceDataSource.getDetailPlaces(placeId, key)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+        return requireNotNull(result)
     }
 
     //Test nominalcase / exception -> null / result is null / result with null

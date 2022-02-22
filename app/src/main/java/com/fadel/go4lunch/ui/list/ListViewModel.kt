@@ -1,18 +1,15 @@
 package com.fadel.go4lunch.ui.list
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
+import androidx.lifecycle.*
 import com.fadel.go4lunch.data.repository.LocationRepository
 import com.fadel.go4lunch.data.repository.NearbyPlacesRepo
-import com.fadel.go4lunch.ui.map.MapViewModel
 import com.fadel.go4lunch.utils.DispatcherProvider
 import com.fadel.go4lunch.utils.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,7 +36,8 @@ class ListViewModel @Inject constructor(
             }.collect { responses ->
                 responses?.let { list ->
                     emit(list.mapNotNull {
-                        print("La photo : ${it.photos}")
+                        val itemId = it.placeId
+
                         RestaurantsItemUiModel(
                             name = it.name ?: return@mapNotNull null,
                             address = it.vicinity ?: return@mapNotNull null,
@@ -53,6 +51,7 @@ class ListViewModel @Inject constructor(
                             interestNumber = "3", //TODO from firestore ?
                             numberOfStars = (it.rating ?: 0.0),
                             onItemClicked = {
+                                onItemClicked(itemId)
                                 navigationOrder.value = NavigationOrder.Detail
                             },
                         )
@@ -61,14 +60,23 @@ class ListViewModel @Inject constructor(
             }
         }
 
+    fun onItemClicked(itemId: String?) {
+        viewModelScope.launch {
+            flowOf(
+                itemId?.let { nearbyPlacesRepository.getDetailResult(it, apiKey) }
+            ).collect { response ->
+
+            }
+        }
+    }
+
     companion object {
         const val apiKey = "AIzaSyCod1va_8xcRFf8epc5HkFkDY1ZUu6bkeo"
     }
 
     sealed class NavigationOrder {
-        object Detail: NavigationOrder()
+        object Detail : NavigationOrder()
     }
-
 
 
 }
