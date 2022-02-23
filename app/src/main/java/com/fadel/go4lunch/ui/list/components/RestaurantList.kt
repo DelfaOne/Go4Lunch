@@ -40,7 +40,7 @@ fun restaurantList(
     restaurantsItemUiModels: List<RestaurantsItemUiModel>,
     modifier: Modifier,
     navHostController: NavHostController?,
-    listViewModel: ListViewModel
+   // listViewModel: ListViewModel
 ) {
     Box(modifier) {
         LazyColumn(
@@ -55,7 +55,7 @@ fun restaurantList(
                         modifier = Modifier,
                         it
                     ) {
-                        listViewModel.onItemClicked()
+                        //listViewModel.onItemClicked()
                         navHostController?.navigate(ListFragment.Routes.DetailFragment.route + "/${it.name}" + "/${it.address}" + "/${it.numberOfStars}" + "/${it.photo}")
                     }
                 }
