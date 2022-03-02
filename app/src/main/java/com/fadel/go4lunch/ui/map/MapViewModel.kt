@@ -1,17 +1,21 @@
 package com.fadel.go4lunch.ui.map
 
 import android.Manifest
-import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.fadel.go4lunch.PermissionRepository
 import com.fadel.go4lunch.data.repository.LocationRepository
 import com.fadel.go4lunch.data.repository.NearbyPlacesRepo
 import com.fadel.go4lunch.utils.DispatcherProvider
 import com.fadel.go4lunch.utils.SingleLiveEvent
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -21,7 +25,7 @@ class MapViewModel @Inject constructor(
     private val nearbyPlacesRepository: NearbyPlacesRepo,
     private val locationRepository: LocationRepository,
     private val permissionRepository: PermissionRepository,
-    dispatcherProvider: DispatcherProvider
+    dispatcherProvider: DispatcherProvider,
 ) : ViewModel() {
 
     val restaurantListLiveData: LiveData<List<MapUiModel>> =
@@ -42,7 +46,7 @@ class MapViewModel @Inject constructor(
                         )
                     }.collect { responses ->
                         responses?.let { list ->
-                            emit(list?.mapNotNull {
+                            emit(list.mapNotNull {
                                 MapUiModel(
                                     id = it.placeId ?: return@mapNotNull null,
                                     name = it.name ?: return@mapNotNull null,
@@ -61,23 +65,20 @@ class MapViewModel @Inject constructor(
     val viewActionSingleLiveEvent = SingleLiveEvent<MapViewActions>()
 
     init {
-        viewModelScope.launch {
-            permissionRepository.permissionListFlow.collect { permissions ->
-                if (
-                    !permissions.contains(Manifest.permission.ACCESS_COARSE_LOCATION)
-                    ||
-                    !permissions.contains(Manifest.permission.ACCESS_FINE_LOCATION)
-                ) {
-                    viewActionSingleLiveEvent.value = MapViewActions.RequestLocationRestriction
-                }
-            }
-        }
 
-        viewModelScope.launch {
-            val position = locationRepository.getLocationFlow().first()
-            withContext(dispatcherProvider.mainDispatcher) { //Back to main thread
-                viewActionSingleLiveEvent.value =
-                    MapViewActions.ZoomTo(position.latitude, position.longitude)
+        viewModelScope.launch(dispatcherProvider.ioDispatcher) {
+            permissionRepository.permissionListFlow.collect { permissions ->
+                withContext(dispatcherProvider.mainDispatcher) { //Back to main thread
+                    viewActionSingleLiveEvent.value = if (
+                        permissions.contains(Manifest.permission.ACCESS_COARSE_LOCATION)
+                        && permissions.contains(Manifest.permission.ACCESS_FINE_LOCATION)
+                    ) {
+                        val position = locationRepository.getLocationFlow().first()
+                        MapViewActions.ZoomTo(position.latitude, position.longitude)
+                    } else {
+                        MapViewActions.RequestLocationRestriction
+                    }
+                }
             }
         }
     }
