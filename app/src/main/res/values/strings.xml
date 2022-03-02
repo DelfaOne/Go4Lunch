@@ -10,4 +10,9 @@
     <string name="title_workmates">Workmates</string>
     <string name="locate">Locate</string>
 
+    //Menu
+    <string name="logout">LOGOUT</string>
+    <string name="settings">SETTINGS</string>
+    <string name="your_lunch">YOUR LUNCH</string>
+
 </resources>
