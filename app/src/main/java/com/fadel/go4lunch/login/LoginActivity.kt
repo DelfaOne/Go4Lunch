@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.fadel.go4lunch.HostActivity
 import com.fadel.go4lunch.R
 import com.fadel.go4lunch.databinding.ActivityLoginBinding
+import com.fadel.go4lunch.ui.DrawerActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -40,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
         Handler().postDelayed(
             {
                 if (user != null) {
-                    val mainActivityIntent = Intent(this, HostActivity::class.java)
+                    val mainActivityIntent = Intent(this, DrawerActivity::class.java)
                     startActivity(mainActivityIntent)
                 }
             }, 2000
