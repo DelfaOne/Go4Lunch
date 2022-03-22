@@ -1,14 +1,13 @@
-package com.fadel.go4lunch.login
+package com.fadel.go4lunch.ui.login
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.fadel.go4lunch.HostActivity
+import com.fadel.go4lunch.ui.main.MainActivity
 import com.fadel.go4lunch.R
 import com.fadel.go4lunch.databinding.ActivityLoginBinding
-import com.fadel.go4lunch.ui.DrawerActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -41,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
         Handler().postDelayed(
             {
                 if (user != null) {
-                    val mainActivityIntent = Intent(this, DrawerActivity::class.java)
+                    val mainActivityIntent = Intent(this, MainActivity::class.java)
                     startActivity(mainActivityIntent)
                 }
             }, 2000
@@ -92,7 +91,7 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
-                    val intent = Intent(this, HostActivity::class.java)
+                    val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()
                 } else {

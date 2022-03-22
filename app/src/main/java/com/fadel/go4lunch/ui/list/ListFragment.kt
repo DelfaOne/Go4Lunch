@@ -89,9 +89,7 @@ class ListFragment : Fragment() {
             viewLifecycleOwner,
             Observer {
                 when (it) {
-                    is ListViewModel.NavigationOrder.Detail -> findNavController().navigate(
-                        R.id.toDetail
-                    )
+                    is ListViewModel.NavigationOrder.Detail -> TODO()
                 }
             }
         )

@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
-import com.fadel.go4lunch.PermissionRepository
+import com.fadel.go4lunch.data.PermissionRepository
 import com.fadel.go4lunch.data.repository.LocationRepository
 import com.fadel.go4lunch.data.repository.NearbyPlacesRepo
 import com.fadel.go4lunch.utils.DispatcherProvider

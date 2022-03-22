@@ -1,4 +1,4 @@
-package com.fadel.go4lunch
+package com.fadel.go4lunch.ui
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
