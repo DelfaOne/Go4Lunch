@@ -3,6 +3,7 @@ package com.fadel.go4lunch.ui.map
 import android.Manifest
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.viewModels
@@ -62,7 +63,17 @@ class MapFragment : SupportMapFragment() {
             }
 
             //googleMap.isMyLocationEnabled = true
-            googleMap.uiSettings.isMyLocationButtonEnabled = true
+            googleMap.isMyLocationEnabled = true;
+
+            googleMap.setOnCameraIdleListener {
+                //Log.e("Camera postion", googleMap.cameraPosition.target.toString())
+                vm.restaurantListLiveData.observe(viewLifecycleOwner) { restaurant ->
+                    restaurant.forEach {
+                        val positionLatLnt = googleMap.cameraPosition.target
+                        googleMap.addMarker(MarkerOptions().position(positionLatLnt))
+                    }
+                }
+            }
         }
     }
 
