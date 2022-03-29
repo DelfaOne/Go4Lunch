@@ -31,14 +31,13 @@ class MapFragment : SupportMapFragment() {
     @SuppressLint("MissingPermission")
     private fun setupMap() {
         getMapAsync { googleMap: GoogleMap ->
-            /*val sydney = LatLng(-34.0, 151.0)
-             googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-             googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))*/
-
             vm.restaurantListLiveData.observe(viewLifecycleOwner) { restaurant ->
                 restaurant.forEach {
-                    val positionLatLnt = LatLng(it.lat, it.long)
-                    googleMap.addMarker(MarkerOptions().position(positionLatLnt))
+                    googleMap.addMarker(
+                        MarkerOptions()
+                            .position(it.latLng)
+                            .title(it.name)
+                    )
                 }
             }
 
@@ -62,17 +61,11 @@ class MapFragment : SupportMapFragment() {
                 }
             }
 
-            //googleMap.isMyLocationEnabled = true
-            googleMap.isMyLocationEnabled = true;
+            // TODO Fadel à dynamiser
+            //googleMap.isMyLocationEnabled = true;
 
             googleMap.setOnCameraIdleListener {
-                //Log.e("Camera postion", googleMap.cameraPosition.target.toString())
-                vm.restaurantListLiveData.observe(viewLifecycleOwner) { restaurant ->
-                    restaurant.forEach {
-                        val positionLatLnt = googleMap.cameraPosition.target
-                        googleMap.addMarker(MarkerOptions().position(positionLatLnt))
-                    }
-                }
+                vm.onCameraIdle(googleMap.cameraPosition.target)
             }
         }
     }

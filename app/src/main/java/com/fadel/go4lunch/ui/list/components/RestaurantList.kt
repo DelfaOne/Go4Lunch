@@ -56,7 +56,7 @@ fun restaurantList(
                         it
                     ) {
                         //listViewModel.onItemClicked()
-                        navHostController?.navigate(ListFragment.Routes.DetailFragment.route + "/${it.name}" + "/${it.address}" + "/${it.numberOfStars}" + "/${it.photo}")
+//                        navHostController?.navigate(ListFragment.Routes.DetailFragment.route + "/${it.name}" + "/${it.address}" + "/${it.numberOfStars}" + "/${it.photo}")
                     }
                 }
             }

@@ -2,25 +2,22 @@ package com.fadel.go4lunch.ui.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.fadel.go4lunch.ui.main.MainActivity
 import com.fadel.go4lunch.R
 import com.fadel.go4lunch.databinding.ActivityLoginBinding
+import com.fadel.go4lunch.ui.main.MainActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var auth: FirebaseAuth
     private lateinit var binding: ActivityLoginBinding
     private lateinit var googleSignInClient: GoogleSignInClient
 
@@ -29,27 +26,20 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        auth = FirebaseAuth.getInstance()
-        checkUserAlreadyConnected(auth.currentUser)
+        Log.d("Nino", "onCreate() called with: savedInstanceState = $savedInstanceState")
 
         setupGoogleSignIn()
 
-    }
-
-    private fun checkUserAlreadyConnected(user: FirebaseUser?) {
-        Handler().postDelayed(
-            {
-                if (user != null) {
-                    val mainActivityIntent = Intent(this, MainActivity::class.java)
-                    startActivity(mainActivityIntent)
-                }
-            }, 2000
-        )
+        if (FirebaseAuth.getInstance().currentUser != null) {
+            val mainActivityIntent = Intent(this, MainActivity::class.java)
+            startActivity(mainActivityIntent)
+            finish()
+        }
     }
 
     private fun setupGoogleSignIn() {
         // Configure Google Sign In
-        binding.googleSignIn.setOnClickListener{
+        binding.googleSignIn.setOnClickListener {
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -86,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth.signInWithCredential(credential)
+        FirebaseAuth.getInstance().signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
