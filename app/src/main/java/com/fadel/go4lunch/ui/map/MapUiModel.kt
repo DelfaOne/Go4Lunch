@@ -1,11 +1,10 @@
 package com.fadel.go4lunch.ui.map
 
-import androidx.annotation.DrawableRes
+import com.google.android.gms.maps.model.LatLng
 
 data class MapUiModel(
     val id: String,
     val name: String,
     val isTested: Boolean,
-    val lat: Double,
-    val long: Double
+    val latLng: LatLng
 )

@@ -16,7 +16,7 @@ import javax.inject.Inject
 class ListViewModel @Inject constructor(
     private val nearbyPlacesRepository: NearbyPlacesRepo,
     private val locationRepository: LocationRepository,
-    dispatcherProvider: DispatcherProvider
+    private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
     val navigationOrder = SingleLiveEvent<NavigationOrder>()
@@ -52,7 +52,7 @@ class ListViewModel @Inject constructor(
                             numberOfStars = (it.rating ?: 0.0),
                             onItemClicked = {
                                 onItemClicked(itemId)
-                                navigationOrder.value = NavigationOrder.Detail
+                                navigationOrder.value = NavigationOrder.Detail("toto")
                             },
                         )
                     })
@@ -61,21 +61,24 @@ class ListViewModel @Inject constructor(
         }
 
     fun onItemClicked(itemId: String?) {
-        viewModelScope.launch {
-            flowOf(
-                itemId?.let { nearbyPlacesRepository.getDetailResult(it, apiKey) }
-            ).collect { response ->
-
+        // TODO A bouger côté DetailVM
+        viewModelScope.launch(dispatcherProvider.ioDispatcher) {
+            if (itemId != null) {
+                nearbyPlacesRepository.getDetailResult(itemId, apiKey)
             }
         }
     }
 
     companion object {
+        // TODO A cacher dans gradle
         const val apiKey = "AIzaSyCod1va_8xcRFf8epc5HkFkDY1ZUu6bkeo"
     }
 
+    // TODO A suppr ?
     sealed class NavigationOrder {
-        object Detail : NavigationOrder()
+        data class Detail(
+            val detailId : String
+        ) : NavigationOrder()
     }
 
 

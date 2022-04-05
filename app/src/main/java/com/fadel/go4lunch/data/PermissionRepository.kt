@@ -1,4 +1,4 @@
-package com.fadel.go4lunch
+package com.fadel.go4lunch.data
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow

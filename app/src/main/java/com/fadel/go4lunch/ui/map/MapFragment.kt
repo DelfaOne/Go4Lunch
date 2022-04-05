@@ -3,6 +3,7 @@ package com.fadel.go4lunch.ui.map
 import android.Manifest
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.viewModels
@@ -30,14 +31,13 @@ class MapFragment : SupportMapFragment() {
     @SuppressLint("MissingPermission")
     private fun setupMap() {
         getMapAsync { googleMap: GoogleMap ->
-            /*val sydney = LatLng(-34.0, 151.0)
-             googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-             googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))*/
-
             vm.restaurantListLiveData.observe(viewLifecycleOwner) { restaurant ->
                 restaurant.forEach {
-                    val positionLatLnt = LatLng(it.lat, it.long)
-                    googleMap.addMarker(MarkerOptions().position(positionLatLnt))
+                    googleMap.addMarker(
+                        MarkerOptions()
+                            .position(it.latLng)
+                            .title(it.name)
+                    )
                 }
             }
 
@@ -61,8 +61,12 @@ class MapFragment : SupportMapFragment() {
                 }
             }
 
-            //googleMap.isMyLocationEnabled = true
-            googleMap.uiSettings.isMyLocationButtonEnabled = true
+            // TODO Fadel à dynamiser
+            //googleMap.isMyLocationEnabled = true;
+
+            googleMap.setOnCameraIdleListener {
+                vm.onCameraIdle(googleMap.cameraPosition.target)
+            }
         }
     }
 

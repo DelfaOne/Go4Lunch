@@ -56,32 +56,32 @@ class ListFragment : Fragment() {
             restaurantsItemUiModels = list,
             navHostController = navController
         )
-
-
-        NavHost(navController = navController, startDestination = Routes.ListFragment.route) {
-
-            // First route : ListRestaurant
-
-            composable(Routes.ListFragment.route) {
-
-                // Lay down the restaurantList Composable
-                // and pass the navController
-                restaurantList(restaurantsItemUiModels = list, modifier = Modifier, navHostController = navController)
-            }
-
-            composable(Routes.DetailFragment.route + "/{name}" + "/{address}" + "/{numberOfStars}" + "/{urlPicture}") {
-
-                val name = it.arguments?.getString("name")
-                val address = it.arguments?.getString("address")
-                val numberOfStars = it.arguments?.getFloat("numberOfStars")
-                val picture = it.arguments?.getString("urlPicture")
-                // Lay down the DetailScreen Composable
-                // and pass the navController
-                DetailScreen(name, address, numberOfStars, picture)
-            }
-
-
-        }
+//
+//
+//        NavHost(navController = navController, startDestination = Routes.ListFragment.route) {
+//
+//            // First route : ListRestaurant
+//
+//            composable(Routes.ListFragment.route) {
+//
+//                // Lay down the restaurantList Composable
+//                // and pass the navController
+//                restaurantList(restaurantsItemUiModels = list, modifier = Modifier, navHostController = navController)
+//            }
+//
+//            composable(Routes.DetailFragment.route + "/{name}" + "/{address}" + "/{numberOfStars}" + "/{urlPicture}") {
+//
+//                val name = it.arguments?.getString("name")
+//                val address = it.arguments?.getString("address")
+//                val numberOfStars = it.arguments?.getFloat("numberOfStars")
+//                val picture = it.arguments?.getString("urlPicture")
+//                // Lay down the DetailScreen Composable
+//                // and pass the navController
+//                DetailScreen(name, address, numberOfStars, picture)
+//            }
+//
+//
+//        }
     }
 
     private fun setupObservers() {
@@ -89,9 +89,7 @@ class ListFragment : Fragment() {
             viewLifecycleOwner,
             Observer {
                 when (it) {
-                    ListViewModel.NavigationOrder.Detail -> findNavController().navigate(
-                        R.id.toDetail
-                    )
+                    is ListViewModel.NavigationOrder.Detail -> TODO()
                 }
             }
         )

@@ -1,21 +1,29 @@
 package com.fadel.go4lunch.data.repository
 
 import com.fadel.go4lunch.data.datasource.NearbyPlacesDataSource
-import io.mockk.verify
-import kotlinx.coroutines.runBlocking
+import com.fadel.go4lunch.data.pojo.nearbyplace.NearbyResponse
+import com.fadel.go4lunch.data.pojo.nearbyplace.NearbyResponses
+import io.mockk.MockK
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.confirmVerified
+import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import org.mockito.Mock
 
 @RunWith(JUnit4::class)
 class NearbyPlacesRepoTest {
 
-    @Mock
-    lateinit var nearbyPlacesDataSource: NearbyPlacesDataSource
+    private val nearbyPlacesDataSource: NearbyPlacesDataSource = mockk()
 
-    lateinit var nearbyPlacesRepo: NearbyPlacesRepo
+    private lateinit var nearbyPlacesRepo: NearbyPlacesRepo
 
     @Before
     fun setup() {
@@ -23,20 +31,133 @@ class NearbyPlacesRepoTest {
     }
 
     @Test
-    fun `nominal case`() = runBlocking {
+    fun `nominal case`() = runTest {
         //GIVEN
         val location = "location"
         val radius = "radius"
         val type = "type"
         val key = "key"
 
+        val nearbyResponses = listOf<NearbyResponse>(
+            mockk(),
+            mockk(),
+            mockk(),
+        )
+
+        coEvery { nearbyPlacesDataSource.getNearbyPlaces(location, radius, type, key) } returns NearbyResponses(nearbyResponses)
+
         //WHEN
-        nearbyPlacesRepo.getNearbyResults(location, radius, type, key)
+        val result = nearbyPlacesRepo.getNearbyResults(location, radius, type, key)
 
         //THEN
-        verify {
-            nearbyPlacesDataSource.
+        assertEquals(nearbyResponses, result)
+        coVerify(exactly = 1) {
+            nearbyPlacesDataSource.getNearbyPlaces(location, radius, type, key)
         }
+        confirmVerified(nearbyPlacesDataSource)
+    }
+
+    @Test
+    fun `edge case - some null children`() = runTest {
+        //GIVEN
+        val location = "location"
+        val radius = "radius"
+        val type = "type"
+        val key = "key"
+
+        val mock1 = mockk<NearbyResponse>()
+        val mock2 = mockk<NearbyResponse>()
+
+        val nearbyResponses = listOf(
+            mock1,
+            null,
+            mock2,
+        )
+
+        coEvery { nearbyPlacesDataSource.getNearbyPlaces(location, radius, type, key) } returns NearbyResponses(nearbyResponses)
+
+        //WHEN
+        val result = nearbyPlacesRepo.getNearbyResults(location, radius, type, key)
+
+        //THEN
+        assertEquals(
+            listOf(
+                mock1,
+                mock2
+            ),
+            result
+        )
+        coVerify(exactly = 1) {
+            nearbyPlacesDataSource.getNearbyPlaces(location, radius, type, key)
+        }
+        confirmVerified(nearbyPlacesDataSource)
+    }
+
+
+    @Test
+    fun `error case - all children are null`() = runTest {
+        //GIVEN
+        val location = "location"
+        val radius = "radius"
+        val type = "type"
+        val key = "key"
+
+        val nearbyResponses = listOf(null)
+
+        coEvery { nearbyPlacesDataSource.getNearbyPlaces(location, radius, type, key) } returns NearbyResponses(nearbyResponses)
+
+        //WHEN
+        val result = nearbyPlacesRepo.getNearbyResults(location, radius, type, key)
+
+        //THEN
+        assertNotNull(result)
+        assertTrue(result!!.isEmpty())
+        coVerify(exactly = 1) {
+            nearbyPlacesDataSource.getNearbyPlaces(location, radius, type, key)
+        }
+        confirmVerified(nearbyPlacesDataSource)
+    }
+
+    @Test
+    fun `error case - results are null`() = runTest {
+        //GIVEN
+        val location = "location"
+        val radius = "radius"
+        val type = "type"
+        val key = "key"
+
+        coEvery { nearbyPlacesDataSource.getNearbyPlaces(location, radius, type, key) } returns NearbyResponses(null)
+
+        //WHEN
+        val result = nearbyPlacesRepo.getNearbyResults(location, radius, type, key)
+
+        //THEN
+        assertNull(result)
+        coVerify(exactly = 1) {
+            nearbyPlacesDataSource.getNearbyPlaces(location, radius, type, key)
+        }
+        confirmVerified(nearbyPlacesDataSource)
+    }
+
+    @Test
+    fun `error case - call raises exception`() = runTest {
+        //GIVEN
+        val location = "location"
+        val radius = "radius"
+        val type = "type"
+        val key = "key"
+
+        coEvery { nearbyPlacesDataSource.getNearbyPlaces(location, radius, type, key) } throws Exception()
+
+        //WHEN
+        val result = nearbyPlacesRepo.getNearbyResults(location, radius, type, key)
+
+        //THEN
+        assertNull(result)
+        coVerify(exactly = 1) {
+            nearbyPlacesDataSource.getNearbyPlaces(location, radius, type, key)
+        }
+        confirmVerified(nearbyPlacesDataSource)
     }
 
 }

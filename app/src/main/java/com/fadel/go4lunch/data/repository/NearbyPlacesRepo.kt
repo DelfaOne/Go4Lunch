@@ -30,14 +30,11 @@ class NearbyPlacesRepo @Inject constructor(
     suspend fun getDetailResult(
         placeId: String,
         key: String
-    ): DetailResponse {
-        val result = try {
-            nearbyPlaceDataSource.getDetailPlaces(placeId, key)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-        return requireNotNull(result)
+    ): DetailResponse? = try {
+        nearbyPlaceDataSource.getDetailPlaces(placeId, key)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
     }
 
     //Test nominalcase / exception -> null / result is null / result with null
