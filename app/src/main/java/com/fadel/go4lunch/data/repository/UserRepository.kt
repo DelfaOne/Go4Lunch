@@ -12,7 +12,7 @@ import kotlinx.coroutines.tasks.await
 class UserRepository {
 
 
-    suspend fun getUsersForPlaceId(placeId : String) : List<???> {
+   /* suspend fun getUsersForPlaceId(placeId : String) : List<???> {
         val result = FirebaseFirestore.getInstance().collection("toto").get().await()
 
         return result.toObjects()
@@ -23,6 +23,6 @@ class UserRepository {
         FirebaseFirestore.getInstance().collection("toto").addSnapshotListener { value, error ->
             trySend(value!!.toObjects<User>())
         }
-    }
+    }*/
 
 }

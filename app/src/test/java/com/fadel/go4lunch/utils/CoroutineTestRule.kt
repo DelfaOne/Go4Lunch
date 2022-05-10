@@ -12,10 +12,10 @@ import org.junit.runners.model.Statement
 
 @ExperimentalCoroutinesApi
 class CoroutineTestRule(
-    val testDispatcher: TestDispatcher = UnconfinedTestDispatcher(
-        TestCoroutineScheduler()
-    )
+    val testDispatcher: TestDispatcher = StandardTestDispatcher()
 ) : TestWatcher() {
+
+    val scope = TestScope(testDispatcher)
 
     val testDispatcherProvider = mockk<DispatcherProvider> {
         every { mainDispatcher } returns testDispatcher

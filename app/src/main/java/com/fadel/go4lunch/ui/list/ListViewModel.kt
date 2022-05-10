@@ -1,6 +1,7 @@
 package com.fadel.go4lunch.ui.list
 
 import androidx.lifecycle.*
+import com.fadel.go4lunch.BuildConfig
 import com.fadel.go4lunch.data.repository.LocationRepository
 import com.fadel.go4lunch.data.repository.NearbyPlacesRepo
 import com.fadel.go4lunch.utils.DispatcherProvider
@@ -48,7 +49,7 @@ class ListViewModel @Inject constructor(
                                 else -> "unknown"
                             },
                             distance = "120", //TODO calcul de la distance
-                            interestNumber = "3", //TODO from firestore ?
+                            interestNumber = "3", //from firestore
                             numberOfStars = (it.rating ?: 0.0),
                             onItemClicked = {
                                 onItemClicked(itemId)
@@ -70,8 +71,7 @@ class ListViewModel @Inject constructor(
     }
 
     companion object {
-        // TODO A cacher dans gradle
-        const val apiKey = "AIzaSyCod1va_8xcRFf8epc5HkFkDY1ZUu6bkeo"
+        const val apiKey = BuildConfig.GMP_KEY
     }
 
     // TODO A suppr ?

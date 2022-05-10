@@ -9,12 +9,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.fadel.go4lunch.R
 import com.fadel.go4lunch.databinding.MainActivityBinding
 import com.fadel.go4lunch.ui.list.ListFragment
 import com.fadel.go4lunch.ui.map.MapFragment
 import com.fadel.go4lunch.ui.workmates.WorkmatesFragment
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,6 +31,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
 
         setupView()
+        initializeUI()
+        setupObservers()
 
         val toggle = ActionBarDrawerToggle(
             this,
@@ -87,14 +93,29 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    /* private fun initializeUI() {
-         binding.logoutButton.setOnClickListener {
+    private fun initializeUI() {
+       /*  binding.mainDrawerNavigationView.getHeaderView(0) {
              logout()
-         }
-     }*/
+         }*/
+        val user = Firebase.auth.currentUser
+        user?.let {
+            binding.debugText.text = user.displayName
 
-    /*private fun logout() {
+        }
+
+    }
+
+    private fun setupObservers() {
+        vm.cardDetails.observe(
+            this,
+            Observer {
+                binding.debugText.text = it.name + it.email
+            }
+        )
+    }
+
+    private fun logout() {
         FirebaseAuth.getInstance().signOut();
-    }*/
+    }
 
 }
