@@ -12,9 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.fadel.go4lunch.R
 import com.fadel.go4lunch.databinding.MainActivityBinding
+import com.fadel.go4lunch.databinding.MainNavigationHeaderBinding
 import com.fadel.go4lunch.ui.list.ListFragment
 import com.fadel.go4lunch.ui.map.MapFragment
 import com.fadel.go4lunch.ui.workmates.WorkmatesFragment
+import com.google.android.material.navigation.NavigationBarMenuView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -26,6 +28,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private val vm by viewModels<MainViewModel>()
     private lateinit var binding: MainActivityBinding
+    private lateinit var headerBinding: MainNavigationHeaderBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,6 +86,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun setupView() {
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        headerBinding = MainNavigationHeaderBinding.bind(binding.mainDrawerNavigationView.getHeaderView(0))
         setSupportActionBar(binding.mainToolbar)
 
         supportFragmentManager.beginTransaction().replace(R.id.main_fragment_container, MapFragment()).commit()
@@ -97,19 +101,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
        /*  binding.mainDrawerNavigationView.getHeaderView(0) {
              logout()
          }*/
-        val user = Firebase.auth.currentUser
-        user?.let {
-            binding.debugText.text = user.displayName
-
-        }
-
     }
 
     private fun setupObservers() {
-        vm.cardDetails.observe(
+        vm.pendingTransactionCount.observe(
             this,
             Observer {
-                binding.debugText.text = it.name + it.email
+                with(headerBinding) {
+                    userName.text = it.name
+                    userEmail.text = it.email
+                    avatar.setImageURI(it.uriPhotoUrl)
+                }
+
+
             }
         )
     }

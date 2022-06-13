@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
+import com.fadel.go4lunch.BuildConfig
 import com.fadel.go4lunch.R
-import com.fadel.go4lunch.ui.list.ListViewModel.Companion.apiKey
 import com.fadel.go4lunch.ui.list.RestaurantsItemUiModel
 import com.gowtham.ratingbar.RatingBar
 
@@ -120,7 +120,7 @@ fun restaurantListItem(
 }
 
 fun photo(restaurantsItemUiModel: RestaurantsItemUiModel): String {
-    return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${restaurantsItemUiModel.photo}&key=$apiKey".also {
+    return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${restaurantsItemUiModel.photo}&key=${BuildConfig.GMP_KEY}".also {
     }
 
 }

@@ -7,24 +7,39 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import com.fadel.go4lunch.data.PermissionRepository
+import com.fadel.go4lunch.data.usecase.GetLoggedUserUseCase
+import com.fadel.go4lunch.ui.main.model.User
+import com.fadel.go4lunch.utils.DispatcherProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val context: Application,
-    private val permissionRepository: PermissionRepository
+    private val permissionRepository: PermissionRepository,
+    getLoggedUserUseCase: GetLoggedUserUseCase,
+    dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
-    private val _cardDetails = MutableLiveData<User>()
-    val cardDetails: LiveData<User> = _cardDetails
-
-    init {
-        getCurrentUser()
-    }
+    val pendingTransactionCount: LiveData<User> =
+        getLoggedUserUseCase.invoke()
+            .map {
+                User(
+                    it?.displayName ?: "Error get name",
+                    it?.email ?: "Error get mail",
+                    it?.photoUrl
+                )
+            }
+            .distinctUntilChanged()
+            .flowOn(dispatcherProvider.ioDispatcher)
+            .asLiveData()
 
     fun onResume() {
         val grantedPermissions = getPermissionList().filter { permission ->
@@ -39,15 +54,4 @@ class MainViewModel @Inject constructor(
 
     private fun getPermissionList() =
         listOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-
-    private fun getCurrentUser() {
-        val user = Firebase.auth.currentUser
-        user?.let {
-            _cardDetails.value = User(
-                it.displayName,
-                it.email
-            )
-        }
-
-    }
 }

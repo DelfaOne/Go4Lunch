@@ -1,16 +1,16 @@
 package com.fadel.go4lunch.ui.list
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import com.fadel.go4lunch.BuildConfig
 import com.fadel.go4lunch.data.repository.LocationRepository
 import com.fadel.go4lunch.data.repository.NearbyPlacesRepo
 import com.fadel.go4lunch.utils.DispatcherProvider
 import com.fadel.go4lunch.utils.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,13 +31,12 @@ class ListViewModel @Inject constructor(
                         "${it.latitude},${it.longitude}",
                         "1500",
                         "restaurant",
-                        apiKey
+                        BuildConfig.GMP_KEY
                     )
                 )
             }.collect { responses ->
                 responses?.let { list ->
                     emit(list.mapNotNull {
-                        val itemId = it.placeId
 
                         RestaurantsItemUiModel(
                             name = it.name ?: return@mapNotNull null,
@@ -51,9 +50,10 @@ class ListViewModel @Inject constructor(
                             distance = "120", //TODO calcul de la distance
                             interestNumber = "3", //from firestore
                             numberOfStars = (it.rating ?: 0.0),
-                            onItemClicked = {
-                                onItemClicked(itemId)
-                                navigationOrder.value = NavigationOrder.Detail("toto")
+                            onItemClicked = it.placeId?.let {
+                                {
+                                    navigationOrder.value = NavigationOrder.Detail(it)
+                                }
                             },
                         )
                     })
@@ -61,23 +61,9 @@ class ListViewModel @Inject constructor(
             }
         }
 
-    fun onItemClicked(itemId: String?) {
-        // TODO A bouger côté DetailVM
-        viewModelScope.launch(dispatcherProvider.ioDispatcher) {
-            if (itemId != null) {
-                nearbyPlacesRepository.getDetailResult(itemId, apiKey)
-            }
-        }
-    }
-
-    companion object {
-        const val apiKey = BuildConfig.GMP_KEY
-    }
-
-    // TODO A suppr ?
     sealed class NavigationOrder {
         data class Detail(
-            val detailId : String
+            val detailId: String
         ) : NavigationOrder()
     }
 

@@ -16,9 +16,9 @@ interface NearbyPlacesDataSource {
     ): NearbyResponses
 
 //    https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJMxOToCnq9EcREuoX_SlbSJY&key=AIzaSyCod1va_8xcRFf8epc5HkFkDY1ZUu6bkeo
-    @GET("maps/api/place/details/json/{place_id}")
+    @GET("maps/api/place/details/json")
     suspend fun getDetailPlaces(
-        @Path("place_id") placeId: String,
-        @Query("key") key: String
+    @Query("place_id") placeId: String,
+    @Query("key") key: String
     ): DetailResponse
 }

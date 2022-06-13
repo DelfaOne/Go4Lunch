@@ -10,8 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
-import com.fadel.go4lunch.ui.list.ListFragment
-import com.fadel.go4lunch.ui.list.ListViewModel
 import com.fadel.go4lunch.ui.list.RestaurantsItemUiModel
 
 @Preview(showBackground = true)
@@ -31,7 +29,6 @@ fun RestaurantListPreview() {
             )
         },
         Modifier,
-        null
     )
 }
 
@@ -39,8 +36,6 @@ fun RestaurantListPreview() {
 fun restaurantList(
     restaurantsItemUiModels: List<RestaurantsItemUiModel>,
     modifier: Modifier,
-    navHostController: NavHostController?,
-   // listViewModel: ListViewModel
 ) {
     Box(modifier) {
         LazyColumn(
@@ -55,8 +50,7 @@ fun restaurantList(
                         modifier = Modifier,
                         it
                     ) {
-                        //listViewModel.onItemClicked()
-//                        navHostController?.navigate(ListFragment.Routes.DetailFragment.route + "/${it.name}" + "/${it.address}" + "/${it.numberOfStars}" + "/${it.photo}")
+                        it.onItemClicked?.invoke()
                     }
                 }
             }

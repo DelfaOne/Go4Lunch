@@ -9,7 +9,7 @@ import javax.inject.Singleton
 @Singleton
 class PermissionRepository @Inject constructor() {
 
-    private val permissionsListMutableStateFlow = MutableSharedFlow<List<String>>(1).apply {
+    private val permissionsListMutableStateFlow = MutableSharedFlow<List<String>>(replay = 1).apply {
         tryEmit(emptyList())
     }
     val permissionListFlow: Flow<List<String>> = permissionsListMutableStateFlow.asSharedFlow()

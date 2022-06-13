@@ -12,13 +12,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.fragment.findNavController
-import com.fadel.go4lunch.R
-import com.fadel.go4lunch.ui.detail.DetailScreen
+import com.fadel.go4lunch.ui.detail.DetailActivity
 import com.fadel.go4lunch.ui.list.components.restaurantList
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -49,54 +43,23 @@ class ListFragment : Fragment() {
         restaurantsItemUiModels: LiveData<List<RestaurantsItemUiModel>>,
     ) {
         val list by restaurantsItemUiModels.observeAsState(emptyList())
-        val navController = rememberNavController()
 
         restaurantList(
             modifier = Modifier,
-            restaurantsItemUiModels = list,
-            navHostController = navController
+            restaurantsItemUiModels = list
         )
-//
-//
-//        NavHost(navController = navController, startDestination = Routes.ListFragment.route) {
-//
-//            // First route : ListRestaurant
-//
-//            composable(Routes.ListFragment.route) {
-//
-//                // Lay down the restaurantList Composable
-//                // and pass the navController
-//                restaurantList(restaurantsItemUiModels = list, modifier = Modifier, navHostController = navController)
-//            }
-//
-//            composable(Routes.DetailFragment.route + "/{name}" + "/{address}" + "/{numberOfStars}" + "/{urlPicture}") {
-//
-//                val name = it.arguments?.getString("name")
-//                val address = it.arguments?.getString("address")
-//                val numberOfStars = it.arguments?.getFloat("numberOfStars")
-//                val picture = it.arguments?.getString("urlPicture")
-//                // Lay down the DetailScreen Composable
-//                // and pass the navController
-//                DetailScreen(name, address, numberOfStars, picture)
-//            }
-//
-//
-//        }
     }
 
     private fun setupObservers() {
-        vm.navigationOrder.observe(
-            viewLifecycleOwner,
-            Observer {
-                when (it) {
-                    is ListViewModel.NavigationOrder.Detail -> TODO()
-                }
+        vm.navigationOrder.observe(viewLifecycleOwner) {
+            when (it) {
+                is ListViewModel.NavigationOrder.Detail -> startActivity(
+                    DetailActivity.navigate(
+                        requireContext(),
+                        it.detailId
+                    )
+                )
             }
-        )
-    }
-
-    sealed class Routes(val route: String) {
-        object ListFragment : Routes("list")
-        object DetailFragment : Routes("detail")
+        }
     }
 }

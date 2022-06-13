@@ -3,6 +3,8 @@ package com.fadel.go4lunch.data
 import android.content.Context
 import com.fadel.go4lunch.data.datasource.NearbyPlacesDataSource
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,6 +23,14 @@ object DataModule {
     @Provides
     @Singleton
     fun provideFusedLocationProviderClient(@ApplicationContext context: Context) = LocationServices.getFusedLocationProviderClient(context)
+
+    @Provides
+    @Singleton
+    fun provideFirebaseAUth() = FirebaseAuth.getInstance()
+
+    @Provides
+    @Singleton
+    fun provideFirestore() = FirebaseFirestore.getInstance()
 
     @Provides
     @Singleton
