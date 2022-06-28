@@ -1,7 +1,9 @@
 package com.fadel.go4lunch.ui.map
 
 import android.Manifest
+import android.location.Location
 import androidx.lifecycle.*
+import com.fadel.go4lunch.BuildConfig
 import com.fadel.go4lunch.data.PermissionRepository
 import com.fadel.go4lunch.data.repository.LocationRepository
 import com.fadel.go4lunch.data.repository.NearbyPlacesRepo
@@ -9,7 +11,6 @@ import com.fadel.go4lunch.utils.DispatcherProvider
 import com.fadel.go4lunch.utils.SingleLiveEvent
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -25,67 +26,35 @@ class MapViewModel @Inject constructor(
 
     private val currentCameraPositionMutableLiveData = MutableLiveData<LatLng>()
 
-    val restaurantListLiveData: LiveData<List<MapUiModel>> =
-        currentCameraPositionMutableLiveData.switchMap {
-            liveData(dispatcherProvider.ioDispatcher) {
-                val results = nearbyPlacesRepository.getNearbyResults(
-                    "${it.latitude},${it.longitude}",
-                    "1500",
-                    "restaurant",
-                    "AIzaSyCod1va_8xcRFf8epc5HkFkDY1ZUu6bkeo"
-                )
+    val restaurantListLiveData: LiveData<List<MapUiModel>> = currentCameraPositionMutableLiveData.switchMap {
+        liveData(dispatcherProvider.ioDispatcher) {
+            val results = nearbyPlacesRepository.getNearbyResults(
+                Location("").apply {
+                    latitude = it.latitude
+                    longitude = it.longitude
+                },
+                "1500",
+                "restaurant",
+                BuildConfig.GMP_KEY
+            )
 
-                results?.let {
-                    emit(
-                        results.mapNotNull {
-                            MapUiModel(
-                                id = it.placeId ?: return@mapNotNull null,
-                                name = it.name ?: return@mapNotNull null,
-                                isTested = false,
-                                latLng = LatLng(
-                                    it.geometry?.location?.lat ?: return@mapNotNull null,
-                                    it.geometry.location.lng ?: return@mapNotNull null
-                                )
+            results?.let {
+                emit(
+                    results.mapNotNull {
+                        MapUiModel(
+                            id = it.placeId ?: return@mapNotNull null,
+                            name = it.name ?: return@mapNotNull null,
+                            isTested = false,
+                            latLng = LatLng(
+                                it.geometry?.location?.lat ?: return@mapNotNull null,
+                                it.geometry.location.lng ?: return@mapNotNull null
                             )
-                        }
-                    )
-                }
+                        )
+                    }
+                )
             }
         }
-
-
-//        liveData(dispatcherProvider.ioDispatcher) {
-//            permissionRepository.permissionListFlow.collectLatest { permissions ->
-//                if (permissions.contains(Manifest.permission.ACCESS_COARSE_LOCATION) && permissions.contains(
-//                        Manifest.permission.ACCESS_FINE_LOCATION
-//                    )
-//                ) {
-//                    locationRepository.getLocationFlow().flatMapLatest {
-//                        flowOf(
-//                            nearbyPlacesRepository.getNearbyResults(
-//                                "${it.latitude},${it.longitude}",
-//                                "1500",
-//                                "restaurant",
-//                                "AIzaSyCod1va_8xcRFf8epc5HkFkDY1ZUu6bkeo"
-//                            )
-//                        )
-//                    }.collect { responses ->
-//                        responses?.let { list ->
-//                            emit(list.mapNotNull {
-//                                MapUiModel(
-//                                    id = it.placeId ?: return@mapNotNull null,
-//                                    name = it.name ?: return@mapNotNull null,
-//                                    isTested = false,
-//                                    lat = it.geometry?.location?.lat ?: return@mapNotNull null,
-//                                    long = it.geometry?.location?.lng ?: return@mapNotNull null
-//                                )
-//                            })
-//                        }
-//                    }
-//                }
-//            }
-//
-//        }
+    }
 
     val viewActionSingleLiveEvent = SingleLiveEvent<MapViewActions>()
 

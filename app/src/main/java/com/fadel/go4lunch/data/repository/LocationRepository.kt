@@ -1,7 +1,6 @@
 package com.fadel.go4lunch.data.repository
 
 import android.annotation.SuppressLint
-import android.location.Location
 import android.os.Looper
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -18,20 +17,22 @@ class LocationRepository @Inject constructor(
 ){
 
     @SuppressLint("MissingPermission")
-    fun getLocationFlow() = callbackFlow<Location> {
+    fun getLocationFlow() = callbackFlow {
         // A new Flow is created. This code executes in a coroutine!
 
         // 1. Create callback and add elements into the flow
         val callback = object : LocationCallback() {
             override fun onLocationResult(result: LocationResult) {
-                result?.let {
-                    trySend(it.lastLocation)
-                }
+                trySend(result.lastLocation)
             }
         }
         // 2. Register the callback to get location updates by calling requestLocationUpdates
         fusedLocationProviderClient.requestLocationUpdates(
-            LocationRequest.create().setSmallestDisplacement(50F).setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setFastestInterval(30_000),
+            LocationRequest
+                .create()
+                .setSmallestDisplacement(50F)
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setFastestInterval(30_000),
             callback,
             Looper.getMainLooper()
         ).addOnFailureListener { e ->

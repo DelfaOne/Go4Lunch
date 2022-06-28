@@ -26,8 +26,6 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Log.d("Nino", "onCreate() called with: savedInstanceState = $savedInstanceState")
-
         setupGoogleSignIn()
 
         if (FirebaseAuth.getInstance().currentUser != null) {

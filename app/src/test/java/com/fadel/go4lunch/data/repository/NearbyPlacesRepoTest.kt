@@ -1,9 +1,8 @@
 package com.fadel.go4lunch.data.repository
 
-import com.fadel.go4lunch.data.datasource.NearbyPlacesDataSource
+import com.fadel.go4lunch.data.datasource.NearbyPlacesWebDataSource
 import com.fadel.go4lunch.data.pojo.nearbyplace.NearbyResponse
 import com.fadel.go4lunch.data.pojo.nearbyplace.NearbyResponses
-import io.mockk.MockK
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.confirmVerified
@@ -21,13 +20,13 @@ import org.junit.runners.JUnit4
 @RunWith(JUnit4::class)
 class NearbyPlacesRepoTest {
 
-    private val nearbyPlacesDataSource: NearbyPlacesDataSource = mockk()
+    private val nearbyPlacesWebDataSource: NearbyPlacesWebDataSource = mockk()
 
     private lateinit var nearbyPlacesRepo: NearbyPlacesRepo
 
     @Before
     fun setup() {
-        nearbyPlacesRepo = NearbyPlacesRepo(nearbyPlacesDataSource)
+        nearbyPlacesRepo = NearbyPlacesRepo(nearbyPlacesWebDataSource)
     }
 
     @Test
@@ -44,7 +43,7 @@ class NearbyPlacesRepoTest {
             mockk(),
         )
 
-        coEvery { nearbyPlacesDataSource.getNearbyPlaces(location, radius, type, key) } returns NearbyResponses(nearbyResponses)
+        coEvery { nearbyPlacesWebDataSource.getNearbyPlaces(location, radius, type, key) } returns NearbyResponses(nearbyResponses)
 
         //WHEN
         val result = nearbyPlacesRepo.getNearbyResults(location, radius, type, key)
@@ -52,9 +51,9 @@ class NearbyPlacesRepoTest {
         //THEN
         assertEquals(nearbyResponses, result)
         coVerify(exactly = 1) {
-            nearbyPlacesDataSource.getNearbyPlaces(location, radius, type, key)
+            nearbyPlacesWebDataSource.getNearbyPlaces(location, radius, type, key)
         }
-        confirmVerified(nearbyPlacesDataSource)
+        confirmVerified(nearbyPlacesWebDataSource)
     }
 
     @Test
@@ -74,7 +73,7 @@ class NearbyPlacesRepoTest {
             mock2,
         )
 
-        coEvery { nearbyPlacesDataSource.getNearbyPlaces(location, radius, type, key) } returns NearbyResponses(nearbyResponses)
+        coEvery { nearbyPlacesWebDataSource.getNearbyPlaces(location, radius, type, key) } returns NearbyResponses(nearbyResponses)
 
         //WHEN
         val result = nearbyPlacesRepo.getNearbyResults(location, radius, type, key)
@@ -88,9 +87,9 @@ class NearbyPlacesRepoTest {
             result
         )
         coVerify(exactly = 1) {
-            nearbyPlacesDataSource.getNearbyPlaces(location, radius, type, key)
+            nearbyPlacesWebDataSource.getNearbyPlaces(location, radius, type, key)
         }
-        confirmVerified(nearbyPlacesDataSource)
+        confirmVerified(nearbyPlacesWebDataSource)
     }
 
 
@@ -104,7 +103,7 @@ class NearbyPlacesRepoTest {
 
         val nearbyResponses = listOf(null)
 
-        coEvery { nearbyPlacesDataSource.getNearbyPlaces(location, radius, type, key) } returns NearbyResponses(nearbyResponses)
+        coEvery { nearbyPlacesWebDataSource.getNearbyPlaces(location, radius, type, key) } returns NearbyResponses(nearbyResponses)
 
         //WHEN
         val result = nearbyPlacesRepo.getNearbyResults(location, radius, type, key)
@@ -113,9 +112,9 @@ class NearbyPlacesRepoTest {
         assertNotNull(result)
         assertTrue(result!!.isEmpty())
         coVerify(exactly = 1) {
-            nearbyPlacesDataSource.getNearbyPlaces(location, radius, type, key)
+            nearbyPlacesWebDataSource.getNearbyPlaces(location, radius, type, key)
         }
-        confirmVerified(nearbyPlacesDataSource)
+        confirmVerified(nearbyPlacesWebDataSource)
     }
 
     @Test
@@ -126,7 +125,7 @@ class NearbyPlacesRepoTest {
         val type = "type"
         val key = "key"
 
-        coEvery { nearbyPlacesDataSource.getNearbyPlaces(location, radius, type, key) } returns NearbyResponses(null)
+        coEvery { nearbyPlacesWebDataSource.getNearbyPlaces(location, radius, type, key) } returns NearbyResponses(null)
 
         //WHEN
         val result = nearbyPlacesRepo.getNearbyResults(location, radius, type, key)
@@ -134,9 +133,9 @@ class NearbyPlacesRepoTest {
         //THEN
         assertNull(result)
         coVerify(exactly = 1) {
-            nearbyPlacesDataSource.getNearbyPlaces(location, radius, type, key)
+            nearbyPlacesWebDataSource.getNearbyPlaces(location, radius, type, key)
         }
-        confirmVerified(nearbyPlacesDataSource)
+        confirmVerified(nearbyPlacesWebDataSource)
     }
 
     @Test
@@ -147,7 +146,7 @@ class NearbyPlacesRepoTest {
         val type = "type"
         val key = "key"
 
-        coEvery { nearbyPlacesDataSource.getNearbyPlaces(location, radius, type, key) } throws Exception()
+        coEvery { nearbyPlacesWebDataSource.getNearbyPlaces(location, radius, type, key) } throws Exception()
 
         //WHEN
         val result = nearbyPlacesRepo.getNearbyResults(location, radius, type, key)
@@ -155,9 +154,9 @@ class NearbyPlacesRepoTest {
         //THEN
         assertNull(result)
         coVerify(exactly = 1) {
-            nearbyPlacesDataSource.getNearbyPlaces(location, radius, type, key)
+            nearbyPlacesWebDataSource.getNearbyPlaces(location, radius, type, key)
         }
-        confirmVerified(nearbyPlacesDataSource)
+        confirmVerified(nearbyPlacesWebDataSource)
     }
 
 }

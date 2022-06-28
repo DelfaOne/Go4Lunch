@@ -1,7 +1,7 @@
 package com.fadel.go4lunch.data
 
 import android.content.Context
-import com.fadel.go4lunch.data.datasource.NearbyPlacesDataSource
+import com.fadel.go4lunch.data.datasource.NearbyPlacesWebDataSource
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -34,14 +34,14 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideNearByPlacesDataSource(): NearbyPlacesDataSource {
+    fun provideNearByPlacesDataSource(): NearbyPlacesWebDataSource {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://maps.googleapis.com/")
             .client(
                 OkHttpClient.Builder()
                     .addInterceptor(
                         HttpLoggingInterceptor().apply {
-                            setLevel(HttpLoggingInterceptor.Level.BODY)
+                            setLevel(HttpLoggingInterceptor.Level.BASIC)
                         }
                     )
                     .build()
@@ -49,7 +49,7 @@ object DataModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        return retrofit.create(NearbyPlacesDataSource::class.java)
+        return retrofit.create(NearbyPlacesWebDataSource::class.java)
 
         //TODO HttpClient Provider
     }

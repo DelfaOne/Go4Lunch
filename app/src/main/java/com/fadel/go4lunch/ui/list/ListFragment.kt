@@ -4,18 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.fadel.go4lunch.databinding.FragmentListBinding
 import com.fadel.go4lunch.ui.detail.DetailActivity
-import com.fadel.go4lunch.ui.list.components.restaurantList
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -45,17 +37,12 @@ class ListFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = RestaurantListAdapter {
-            //TODO
-        }
-
-        vb.restaurantsRecyclerView.layoutManager = LinearLayoutManager(context)
+        adapter = RestaurantListAdapter()
         vb.restaurantsRecyclerView.adapter = adapter
-        vm.restaurantListLiveData.observe(viewLifecycleOwner){
+        vm.restaurantListLiveData.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
     }
-
 
     private fun setupObservers() {
         vm.navigationOrder.observe(viewLifecycleOwner) {

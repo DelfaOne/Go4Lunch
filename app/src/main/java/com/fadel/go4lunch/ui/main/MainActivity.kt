@@ -1,26 +1,20 @@
 package com.fadel.go4lunch.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import com.fadel.go4lunch.R
 import com.fadel.go4lunch.databinding.MainActivityBinding
 import com.fadel.go4lunch.databinding.MainNavigationHeaderBinding
 import com.fadel.go4lunch.ui.list.ListFragment
 import com.fadel.go4lunch.ui.map.MapFragment
 import com.fadel.go4lunch.ui.workmates.WorkmatesFragment
-import com.google.android.material.navigation.NavigationBarMenuView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,7 +27,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setupView()
+        setupView(savedInstanceState)
         initializeUI()
         setupObservers()
 
@@ -58,7 +52,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        Log.d("Nino", "onNavigationItemSelected() called with: item = $item")
         binding.mainDrawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
@@ -83,13 +76,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .commit()
     }
 
-    private fun setupView() {
+    private fun setupView(savedInstanceState: Bundle?) {
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         headerBinding = MainNavigationHeaderBinding.bind(binding.mainDrawerNavigationView.getHeaderView(0))
         setSupportActionBar(binding.mainToolbar)
 
-        supportFragmentManager.beginTransaction().replace(R.id.main_fragment_container, MapFragment()).commit()
+        if (savedInstanceState == null) {
+            navigateTo(MapFragment())
+        }
 
         binding.mainBottomNavigationView.setOnItemSelectedListener  { item ->
             switchScreen(item.itemId)
@@ -104,18 +99,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun setupObservers() {
-        vm.pendingTransactionCount.observe(
-            this,
-            Observer {
-                with(headerBinding) {
-                    userName.text = it.name
-                    userEmail.text = it.email
-                    avatar.setImageURI(it.uriPhotoUrl)
-                }
-
-
+        vm.pendingTransactionCount.observe(this) {
+            with(headerBinding) {
+                userName.text = it.name
+                userEmail.text = it.email
+                avatar.setImageURI(it.uriPhotoUrl)
             }
-        )
+        }
     }
 
     private fun logout() {

@@ -1,5 +1,7 @@
 package com.fadel.go4lunch.ui.list
 
+import com.fadel.go4lunch.utils.EquatableCallback
+
 data class RestaurantsItemUiModel(
     val name: String,
     val address: String,
@@ -8,5 +10,5 @@ data class RestaurantsItemUiModel(
     val distance: String,
     val interestNumber: String,
     val numberOfStars: Float,
-    val onItemClicked: (() -> Unit)?
+    val onItemClicked: EquatableCallback?
 )
