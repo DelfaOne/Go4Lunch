@@ -7,6 +7,6 @@ data class RestaurantsItemUiModel(
     val openingHours: String,
     val distance: String,
     val interestNumber: String,
-    val numberOfStars: Double,
+    val numberOfStars: Float,
     val onItemClicked: (() -> Unit)?
 )

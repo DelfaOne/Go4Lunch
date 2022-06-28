@@ -35,6 +35,8 @@
         <entry key="../../../../layout/compose-model-1654616020800.xml" value="0.2796296296296296" />
         <entry key="../../../../layout/compose-model-1655108032188.xml" value="0.1" />
         <entry key="../../../../layout/compose-model-1655114433579.xml" value="0.2796296296296296" />
+        <entry key="../../../../layout/compose-model-1655128542174.xml" value="0.1" />
+        <entry key="../../../../layout/compose-model-1656429725651.xml" value="0.37744140625" />
         <entry key="../../.gradle/caches/transforms-3/6df8c2a40b2ba565b90d9da7a42b400b/transformed/jetified-firebase-ui-auth-7.2.0/res/drawable/fui_idp_button_background_github.xml" value="0.24791666666666667" />
         <entry key="app/src/main/res/drawable/ic_baseline_map_24.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/ic_baseline_people_24.xml" value="0.2" />
@@ -58,6 +60,7 @@
         <entry key="app/src/main/res/layout/main_activity.xml" value="0.19300911854103345" />
         <entry key="app/src/main/res/layout/main_navigation_header.xml" value="0.2966485507246377" />
         <entry key="app/src/main/res/layout/menu_header.xml" value="0.317481884057971" />
+        <entry key="app/src/main/res/layout/restaurant_item.xml" value="0.3546195652173913" />
         <entry key="app/src/main/res/menu/activity_main_drawer.xml" value="0.396875" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
         <entry key="app/src/main/res/menu/drawer_menu.xml" value="0.3828125" />
