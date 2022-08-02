@@ -7,6 +7,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.fadel.go4lunch.R
 import com.fadel.go4lunch.databinding.MainActivityBinding
 import com.fadel.go4lunch.databinding.MainNavigationHeaderBinding
@@ -70,10 +71,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun navigateTo(fragment: Fragment) {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.main_fragment_container, fragment)
-            .commit()
+        supportFragmentManager.commit {
+            replace(R.id.main_fragment_container, fragment)
+        }
     }
 
     private fun setupView(savedInstanceState: Bundle?) {

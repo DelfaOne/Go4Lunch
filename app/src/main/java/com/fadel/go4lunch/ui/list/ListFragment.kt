@@ -48,10 +48,7 @@ class ListFragment : Fragment() {
         vm.navigationOrder.observe(viewLifecycleOwner) {
             when (it) {
                 is ListViewModel.NavigationOrder.Detail -> startActivity(
-                    DetailActivity.navigate(
-                        requireContext(),
-                        it.detailId
-                    )
+                    DetailActivity.navigate(requireContext(), it.detailId)
                 )
             }
         }

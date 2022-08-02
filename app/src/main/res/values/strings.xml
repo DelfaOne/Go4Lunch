@@ -26,4 +26,10 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
 
+    //Detail
+    <string name="detail_call">CALL</string>
+    <string name="detail_like">LIKE</string>
+    <string name="detail_website">WEBSITE</string>
+
+
 </resources>

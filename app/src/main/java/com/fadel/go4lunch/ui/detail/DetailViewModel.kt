@@ -19,7 +19,7 @@ class DetailViewModel @Inject constructor(
 
     fun getViewStateLiveData(): LiveData<RestaurantDetailUiModel> = liveData(dispatcherProvider.ioDispatcher) {
         nearbyPlacesRepo.getDetailResult(
-            savedStateHandle.get<String>(DetailActivity.KEY_PLACE_ID)!!,
+            savedStateHandle.get<String>(DetailFragment.KEY_PLACE_ID)!!,
             BuildConfig.GMP_KEY
         )?.result?.let {
             if (it.placeId != null && it.name != null && it.formattedAddress != null && it.photos != null && it.rating != null && it.formattedPhoneNumber != null && it.website != null) {
