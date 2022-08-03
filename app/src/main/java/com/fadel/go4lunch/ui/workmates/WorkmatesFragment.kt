@@ -6,39 +6,45 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.fadel.go4lunch.databinding.FragmentListBinding
 import com.fadel.go4lunch.databinding.FragmentWorkmatesBinding
+import com.fadel.go4lunch.ui.list.ListViewModel
+import com.fadel.go4lunch.ui.list.RestaurantListAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class WorkmatesFragment : Fragment() {
 
-    private lateinit var notificationsViewModel: WorkmatesViewModel
-    private var _binding: FragmentWorkmatesBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private val vm by viewModels<WorkmatesViewModel>()
+    private lateinit var vb: FragmentWorkmatesBinding
+    private lateinit var adapter: WorkmatesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        notificationsViewModel =
-            ViewModelProvider(this).get(WorkmatesViewModel::class.java)
-
-        _binding = FragmentWorkmatesBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textWorkmates
-        notificationsViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
-        return root
+    ): View {
+        vb = FragmentWorkmatesBinding.inflate(
+            inflater,
+            container,
+            false
+        )
+        return vb.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupRecyclerView()
+    }
+
+    private fun setupRecyclerView() {
+        adapter = WorkmatesAdapter()
+        vb.workmateRecyclerView.adapter = adapter
+        vm.workmatesListLiveData.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+        }
     }
 }

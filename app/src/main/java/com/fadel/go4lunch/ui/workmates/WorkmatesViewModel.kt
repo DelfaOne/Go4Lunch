@@ -1,13 +1,34 @@
 package com.fadel.go4lunch.ui.workmates
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import com.fadel.go4lunch.data.usecase.GetWorkmatesUseCase
+import com.fadel.go4lunch.utils.DispatcherProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class WorkmatesViewModel : ViewModel() {
+@HiltViewModel
+class WorkmatesViewModel @Inject constructor(
+    dispatcherProvider: DispatcherProvider,
+    getWorkmatesUseCase: GetWorkmatesUseCase
+) : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is workmates Fragment"
-    }
-    val text: LiveData<String> = _text
+    val workmatesListLiveData: LiveData<List<WorkmatesUiModel>> =
+        getWorkmatesUseCase.invoke().map {
+            it.map { workmate ->
+                WorkmatesUiModel(
+                    workmate.uid,
+                    workmate.userName,
+                    workmate.avatarUrl
+                )
+            }
+        }
+            .distinctUntilChanged()
+            .flowOn(dispatcherProvider.ioDispatcher)
+            .asLiveData()
+
 }
