@@ -1,4 +1,4 @@
-package com.fadel.go4lunch.data.usecase
+package com.fadel.go4lunch.domain.usecase
 
 import com.fadel.go4lunch.data.UserData
 import com.fadel.go4lunch.data.repository.UserRepository
@@ -11,6 +11,7 @@ class GetWorkmatesUseCase @Inject constructor(
     private val userRepository: UserRepository
 ) {
 
+    // TODO FADEL Expose UserEntity (validated)
     operator fun invoke(): Flow<List<UserData>> = combine(
         getLoggedUserUseCase.invoke(),
         userRepository.getWorkmates()
