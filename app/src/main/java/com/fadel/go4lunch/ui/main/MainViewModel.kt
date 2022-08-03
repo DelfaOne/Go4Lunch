@@ -5,15 +5,12 @@ import android.app.Application
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.fadel.go4lunch.data.PermissionRepository
-import com.fadel.go4lunch.data.usecase.GetLoggedUserUseCase
+import com.fadel.go4lunch.domain.usecase.GetLoggedUserUseCase
 import com.fadel.go4lunch.ui.main.model.User
 import com.fadel.go4lunch.utils.DispatcherProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn

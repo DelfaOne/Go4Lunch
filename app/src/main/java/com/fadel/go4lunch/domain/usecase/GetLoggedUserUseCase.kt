@@ -1,4 +1,4 @@
-package com.fadel.go4lunch.data.usecase
+package com.fadel.go4lunch.domain.usecase
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
