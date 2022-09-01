@@ -4,8 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.fadel.go4lunch.BuildConfig
-import com.fadel.go4lunch.data.repository.LocationRepository
+import com.fadel.go4lunch.data.repository.location.LocationRepository
 import com.fadel.go4lunch.data.repository.NearbyPlacesRepo
+import com.fadel.go4lunch.data.repository.location.LocationEntity
 import com.fadel.go4lunch.utils.DispatcherProvider
 import com.fadel.go4lunch.utils.EquatableCallback
 import com.fadel.go4lunch.utils.SingleLiveEvent
@@ -28,7 +29,7 @@ class ListViewModel @Inject constructor(
             locationRepository.getLocationFlow().transformLatest {
                 emit(
                     nearbyPlacesRepository.getNearbyResults(
-                        it,
+                        LocationEntity(it.latitude, it.longitude),
                         "1500",
                         "restaurant",
                         BuildConfig.GMP_KEY

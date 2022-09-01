@@ -33,4 +33,6 @@ class CoroutineTestRule(
             Dispatchers.resetMain() // reset main dispatcher to the original Main dispatcher
         }
     }
+
+    fun runTest(block: suspend TestScope.() -> Unit) = scope.runTest { block() }
 }

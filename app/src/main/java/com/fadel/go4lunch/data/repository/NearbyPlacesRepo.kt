@@ -1,25 +1,25 @@
 package com.fadel.go4lunch.data.repository
 
-import android.location.Location
 import androidx.collection.LruCache
 import com.fadel.go4lunch.data.datasource.NearbyPlacesWebDataSource
 import com.fadel.go4lunch.data.pojo.nearbyplace.NearbyResponse
 import com.fadel.go4lunch.data.pojo.nearbyplace.NearbyResponses
 import com.fadel.go4lunch.data.pojo.nearbyplace.details.DetailResponse
-import com.google.gson.Gson
+import com.fadel.go4lunch.data.repository.location.LocationEntity
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class NearbyPlacesRepo @Inject constructor(
-    private val nearbyPlaceDataSource: NearbyPlacesWebDataSource
+    private val nearbyPlaceDataSource: NearbyPlacesWebDataSource,
+    private val locationUtils: LocationUtils
 ) {
 
     private val nearbyPlaceCache = LruCache<NearbyPlaceKey, NearbyResponses>(20)
     private val placeDetailCache = LruCache<String, DetailResponse>(400)
 
     suspend fun getNearbyResults(
-        location: Location,
+        location: LocationEntity,
         radius: String,
         type: String,
         apiKey: String
@@ -28,7 +28,7 @@ class NearbyPlacesRepo @Inject constructor(
             val key = NearbyPlaceKey(location, radius, type)
 
             nearbyPlaceCache[key] ?: nearbyPlaceDataSource.getNearbyPlaces(
-                location = "${location.latitude},${location.longitude}",
+                location = "${location.lat},${location.long}",
                 radius = radius,
                 type = type,
                 key = apiKey
@@ -46,9 +46,10 @@ class NearbyPlacesRepo @Inject constructor(
         placeId: String,
         key: String
     ): DetailResponse? = try {
-        placeDetailCache[placeId] ?: nearbyPlaceDataSource.getDetailPlaces(placeId, key).also { response ->
-            placeDetailCache.put(placeId, response)
-        }
+        placeDetailCache[placeId] ?: nearbyPlaceDataSource.getDetailPlaces(placeId, key)
+            .also { response ->
+                placeDetailCache.put(placeId, response)
+            }
     } catch (e: Exception) {
         e.printStackTrace()
         null
@@ -57,8 +58,8 @@ class NearbyPlacesRepo @Inject constructor(
     //Test nominalcase / exception -> null / result is null / result with null
 
 
-    private class NearbyPlaceKey(
-        private val location: Location,
+    private inner class NearbyPlaceKey(
+        private val location: LocationEntity,
         private val radius: String,
         private val type: String,
     ) {
@@ -71,9 +72,7 @@ class NearbyPlacesRepo @Inject constructor(
             if (radius != other.radius) return false
             if (type != other.type) return false
 
-            if (location.distanceTo(other.location) > 50) {
-                return false
-            }
+            if (locationUtils.distanceBetween(this.location, other.location) > 50) return false
 
             return true
         }

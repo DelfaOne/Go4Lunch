@@ -1,4 +1,4 @@
-package com.fadel.go4lunch.data.repository
+package com.fadel.go4lunch.data.repository.location
 
 import android.annotation.SuppressLint
 import android.os.Looper

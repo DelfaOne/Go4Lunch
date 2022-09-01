@@ -5,8 +5,9 @@ import android.location.Location
 import androidx.lifecycle.*
 import com.fadel.go4lunch.BuildConfig
 import com.fadel.go4lunch.data.PermissionRepository
-import com.fadel.go4lunch.data.repository.LocationRepository
+import com.fadel.go4lunch.data.repository.location.LocationRepository
 import com.fadel.go4lunch.data.repository.NearbyPlacesRepo
+import com.fadel.go4lunch.data.repository.location.LocationEntity
 import com.fadel.go4lunch.utils.DispatcherProvider
 import com.fadel.go4lunch.utils.SingleLiveEvent
 import com.google.android.gms.maps.model.LatLng
@@ -29,10 +30,7 @@ class MapViewModel @Inject constructor(
     val restaurantListLiveData: LiveData<List<MapUiModel>> = currentCameraPositionMutableLiveData.switchMap {
         liveData(dispatcherProvider.ioDispatcher) {
             val results = nearbyPlacesRepository.getNearbyResults(
-                Location("").apply {
-                    latitude = it.latitude
-                    longitude = it.longitude
-                },
+                LocationEntity(it.latitude, it.longitude),
                 "1500",
                 "restaurant",
                 BuildConfig.GMP_KEY

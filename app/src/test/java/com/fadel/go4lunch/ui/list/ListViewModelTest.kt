@@ -1,6 +1,6 @@
 package com.fadel.go4lunch.ui.list
 
-import com.fadel.go4lunch.data.repository.LocationRepository
+import com.fadel.go4lunch.data.repository.location.LocationRepository
 import com.fadel.go4lunch.data.repository.NearbyPlacesRepo
 import com.fadel.go4lunch.utils.CoroutineTestRule
 import io.mockk.mockk

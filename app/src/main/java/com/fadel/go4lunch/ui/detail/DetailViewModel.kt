@@ -30,7 +30,7 @@ class DetailViewModel @Inject constructor(
                             id = it.placeId,
                             name = it.name,
                             address = it.formattedAddress,
-                            imageUrl = photo(firstPhotoUrl),
+                            imageUrl = buildPhotoUrl(firstPhotoUrl),
                             rating = it.rating.toFloat(),
                             phoneNumber = it.formattedPhoneNumber,
                             website = it.website
@@ -41,7 +41,7 @@ class DetailViewModel @Inject constructor(
         }
     }
 
-    fun photo(photoReference: String) =
+    private fun buildPhotoUrl(photoReference: String) =
         "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=$photoReference&key=${BuildConfig.GMP_KEY}"
 
 }
