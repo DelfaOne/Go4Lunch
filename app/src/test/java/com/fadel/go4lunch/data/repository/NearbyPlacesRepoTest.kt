@@ -3,6 +3,7 @@ package com.fadel.go4lunch.data.repository
 import com.fadel.go4lunch.data.datasource.NearbyPlacesWebDataSource
 import com.fadel.go4lunch.data.pojo.nearbyplace.NearbyResponse
 import com.fadel.go4lunch.data.pojo.nearbyplace.NearbyResponses
+import com.fadel.go4lunch.data.repository.location.LocationEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.confirmVerified
@@ -21,18 +22,19 @@ import org.junit.runners.JUnit4
 class NearbyPlacesRepoTest {
 
     private val nearbyPlacesWebDataSource: NearbyPlacesWebDataSource = mockk()
+    private val locationUtils: LocationUtils = mockk()
 
     private lateinit var nearbyPlacesRepo: NearbyPlacesRepo
 
     @Before
     fun setup() {
-        nearbyPlacesRepo = NearbyPlacesRepo(nearbyPlacesWebDataSource)
+        nearbyPlacesRepo = NearbyPlacesRepo(nearbyPlacesWebDataSource, locationUtils)
     }
 
     @Test
     fun `nominal case`() = runTest {
         //GIVEN
-        val location = "location"
+        val location = LocationEntity(0.0, 0.0)
         val radius = "radius"
         val type = "type"
         val key = "key"
@@ -43,7 +45,7 @@ class NearbyPlacesRepoTest {
             mockk(),
         )
 
-        coEvery { nearbyPlacesWebDataSource.getNearbyPlaces(location, radius, type, key) } returns NearbyResponses(nearbyResponses)
+        coEvery { nearbyPlacesWebDataSource.getNearbyPlaces("0.0,0.0", radius, type, key) } returns NearbyResponses(nearbyResponses)
 
         //WHEN
         val result = nearbyPlacesRepo.getNearbyResults(location, radius, type, key)
@@ -51,7 +53,7 @@ class NearbyPlacesRepoTest {
         //THEN
         assertEquals(nearbyResponses, result)
         coVerify(exactly = 1) {
-            nearbyPlacesWebDataSource.getNearbyPlaces(location, radius, type, key)
+            nearbyPlacesWebDataSource.getNearbyPlaces("0.0,0.0", radius, type, key)
         }
         confirmVerified(nearbyPlacesWebDataSource)
     }
@@ -59,7 +61,7 @@ class NearbyPlacesRepoTest {
     @Test
     fun `edge case - some null children`() = runTest {
         //GIVEN
-        val location = "location"
+        val location = LocationEntity(0.0, 0.0)
         val radius = "radius"
         val type = "type"
         val key = "key"
@@ -73,7 +75,7 @@ class NearbyPlacesRepoTest {
             mock2,
         )
 
-        coEvery { nearbyPlacesWebDataSource.getNearbyPlaces(location, radius, type, key) } returns NearbyResponses(nearbyResponses)
+        coEvery { nearbyPlacesWebDataSource.getNearbyPlaces("0.0,0.0", radius, type, key) } returns NearbyResponses(nearbyResponses)
 
         //WHEN
         val result = nearbyPlacesRepo.getNearbyResults(location, radius, type, key)
@@ -87,7 +89,7 @@ class NearbyPlacesRepoTest {
             result
         )
         coVerify(exactly = 1) {
-            nearbyPlacesWebDataSource.getNearbyPlaces(location, radius, type, key)
+            nearbyPlacesWebDataSource.getNearbyPlaces("0.0,0.0", radius, type, key)
         }
         confirmVerified(nearbyPlacesWebDataSource)
     }
@@ -96,14 +98,14 @@ class NearbyPlacesRepoTest {
     @Test
     fun `error case - all children are null`() = runTest {
         //GIVEN
-        val location = "location"
+        val location = LocationEntity(0.0, 0.0)
         val radius = "radius"
         val type = "type"
         val key = "key"
 
         val nearbyResponses = listOf(null)
 
-        coEvery { nearbyPlacesWebDataSource.getNearbyPlaces(location, radius, type, key) } returns NearbyResponses(nearbyResponses)
+        coEvery { nearbyPlacesWebDataSource.getNearbyPlaces("0.0,0.0", radius, type, key) } returns NearbyResponses(nearbyResponses)
 
         //WHEN
         val result = nearbyPlacesRepo.getNearbyResults(location, radius, type, key)
@@ -112,7 +114,7 @@ class NearbyPlacesRepoTest {
         assertNotNull(result)
         assertTrue(result!!.isEmpty())
         coVerify(exactly = 1) {
-            nearbyPlacesWebDataSource.getNearbyPlaces(location, radius, type, key)
+            nearbyPlacesWebDataSource.getNearbyPlaces("0.0,0.0", radius, type, key)
         }
         confirmVerified(nearbyPlacesWebDataSource)
     }
@@ -120,12 +122,12 @@ class NearbyPlacesRepoTest {
     @Test
     fun `error case - results are null`() = runTest {
         //GIVEN
-        val location = "location"
+        val location = LocationEntity(0.0, 0.0)
         val radius = "radius"
         val type = "type"
         val key = "key"
 
-        coEvery { nearbyPlacesWebDataSource.getNearbyPlaces(location, radius, type, key) } returns NearbyResponses(null)
+        coEvery { nearbyPlacesWebDataSource.getNearbyPlaces("0.0,0.0", radius, type, key) } returns NearbyResponses(null)
 
         //WHEN
         val result = nearbyPlacesRepo.getNearbyResults(location, radius, type, key)
@@ -133,7 +135,7 @@ class NearbyPlacesRepoTest {
         //THEN
         assertNull(result)
         coVerify(exactly = 1) {
-            nearbyPlacesWebDataSource.getNearbyPlaces(location, radius, type, key)
+            nearbyPlacesWebDataSource.getNearbyPlaces("0.0,0.0", radius, type, key)
         }
         confirmVerified(nearbyPlacesWebDataSource)
     }
@@ -141,12 +143,12 @@ class NearbyPlacesRepoTest {
     @Test
     fun `error case - call raises exception`() = runTest {
         //GIVEN
-        val location = "location"
+        val location = LocationEntity(0.0, 0.0)
         val radius = "radius"
         val type = "type"
         val key = "key"
 
-        coEvery { nearbyPlacesWebDataSource.getNearbyPlaces(location, radius, type, key) } throws Exception()
+        coEvery { nearbyPlacesWebDataSource.getNearbyPlaces("0.0,0.0", radius, type, key) } throws Exception()
 
         //WHEN
         val result = nearbyPlacesRepo.getNearbyResults(location, radius, type, key)
@@ -154,7 +156,7 @@ class NearbyPlacesRepoTest {
         //THEN
         assertNull(result)
         coVerify(exactly = 1) {
-            nearbyPlacesWebDataSource.getNearbyPlaces(location, radius, type, key)
+            nearbyPlacesWebDataSource.getNearbyPlaces("0.0,0.0", radius, type, key)
         }
         confirmVerified(nearbyPlacesWebDataSource)
     }

@@ -1,11 +1,13 @@
 package com.fadel.go4lunch.ui.detail
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.SavedStateHandle
 import com.fadel.go4lunch.BuildConfig
 import com.fadel.go4lunch.data.pojo.nearbyplace.details.DetailResponse
 import com.fadel.go4lunch.data.pojo.nearbyplace.details.Result
 import com.fadel.go4lunch.data.repository.NearbyPlacesRepo
 import com.fadel.go4lunch.utils.CoroutineTestRule
+import com.fadel.go4lunch.utils.observeForTesting
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -27,8 +29,11 @@ class DetailViewModelTest {
 
     private val savedStateHandle: SavedStateHandle = mockk()
 
-    @Rule
+    @get:Rule
     val coroutineTestRule = CoroutineTestRule()
+
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun setup() {
@@ -49,12 +54,13 @@ class DetailViewModelTest {
     @Test
     fun `should init view state`() = coroutineTestRule.runTest {
         //WHEN
-        detailViewModel.getViewStateLiveData().observeForever { }
-        runCurrent()
-        val result = detailViewModel.getViewStateLiveData().value
+        detailViewModel.getViewStateLiveData().observeForTesting(this) {
+            val result = it.value
 
-        //THEN
-        assertEquals(getDefaultRestaurantDetailUiModel(), result)
+
+            //THEN
+            assertEquals(getDefaultRestaurantDetailUiModel(), result)
+        }
     }
 
     private fun getDefaultDetailResponse() = DetailResponse(

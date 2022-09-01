@@ -3,7 +3,9 @@ package com.fadel.go4lunch.data.repository
 import android.location.Location
 import com.fadel.go4lunch.data.repository.location.LocationEntity
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class LocationUtils @Inject constructor(){
 
     fun distanceBetween(locationEntity1: LocationEntity,locationEntity2: LocationEntity): Float {
