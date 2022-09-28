@@ -170,7 +170,7 @@
                 android:layout_margin="16dp"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 app:layout_constraintTop_toBottomOf="@+id/divider"
-                tools:listitem="TODO"/>
+                tools:listitem="@layout/workmate_item"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
@@ -183,6 +183,9 @@
         android:baselineAlignBottom="false"
         android:clickable="true"
         android:focusable="true"
+        android:elevation="8dp"
+        app:maxImageSize="30dp"
+        android:src="@drawable/ic_baseline_check_circle_24"
         app:backgroundTint="@color/white"
         app:fabSize="normal"
         app:layout_anchor="@id/detailAppBar"

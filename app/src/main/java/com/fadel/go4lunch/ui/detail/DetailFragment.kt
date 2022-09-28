@@ -1,6 +1,7 @@
 package com.fadel.go4lunch.ui.detail
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,6 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.fadel.go4lunch.databinding.FragmentDetailBinding
+import com.fadel.go4lunch.ui.workmates.WorkmatesAdapter
+import com.fadel.go4lunch.ui.workmates.WorkmatesUiModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,6 +22,7 @@ class DetailFragment : Fragment() {
 
     private val vm by viewModels<DetailViewModel>()
     private lateinit var vb: FragmentDetailBinding
+    private lateinit var adapter: WorkmatesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +49,7 @@ class DetailFragment : Fragment() {
             Glide.with(vb.detailPicture)
                 .load(restaurantDetail.imageUrl.toUri())
                 .into(vb.detailPicture)
+            setupRecyclerView(restaurantDetail.workmatesInterested)
 
             vb.detailCallButton.setOnClickListener {
                 ContextCompat.startActivity(
@@ -62,8 +67,24 @@ class DetailFragment : Fragment() {
                     Intent(Intent.ACTION_VIEW, Uri.parse(restaurantDetail.website)),
                     null
                 )
+
+                vb.choseRestaurantButton.apply {
+                    backgroundTintList = ColorStateList.valueOf(restaurantDetail.buttonChoiceColor)
+                    setOnClickListener {
+                        vm.onRestaurantChooseClicked()
+                    }
+                }
             }
+
         }
+
+    }
+
+    private fun setupRecyclerView(listWorkmatesInterested: List<WorkmatesUiModel>) {
+        adapter = WorkmatesAdapter()
+        vb.detailRecyclerView.adapter = adapter
+        adapter.submitList(listWorkmatesInterested)
+
     }
 
     companion object {

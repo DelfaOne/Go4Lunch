@@ -3,7 +3,7 @@ package com.fadel.go4lunch.ui.workmates
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.fadel.go4lunch.data.usecase.GetWorkmatesUseCase
+import com.fadel.go4lunch.domain.workmates.usecase.GetWorkmatesUseCase
 import com.fadel.go4lunch.utils.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -14,20 +14,18 @@ import javax.inject.Inject
 @HiltViewModel
 class WorkmatesViewModel @Inject constructor(
     dispatcherProvider: DispatcherProvider,
-    getWorkmatesUseCase: GetWorkmatesUseCase
+    getWorkmatesUseCase: GetWorkmatesUseCase,
+    workmateUiModelConverter: WorkmateUiModelConverter
 ) : ViewModel() {
 
     val workmatesListLiveData: LiveData<List<WorkmatesUiModel>> =
-        getWorkmatesUseCase.invoke().map {
-            it.map { workmate ->
-                WorkmatesUiModel(
-                    workmate.uid,
-                    workmate.userName,
-                    workmate.avatarUrl
-                )
-            }
-        }
+        getWorkmatesUseCase.invoke()
             .distinctUntilChanged()
+            .map {
+                it.map { workmate ->
+                    workmateUiModelConverter.convertWorkmate(workmate)
+                }
+            }
             .flowOn(dispatcherProvider.ioDispatcher)
             .asLiveData()
 
