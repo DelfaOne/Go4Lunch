@@ -3,6 +3,7 @@ package com.fadel.go4lunch.ui.login
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.fadel.go4lunch.R
 import com.fadel.go4lunch.databinding.ActivityLoginBinding
@@ -20,19 +21,26 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var googleSignInClient: GoogleSignInClient
+    private val vm by viewModels<LoginViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        vm.navigationOrder.observe(this) {
+            when(it) {
+                LoginViewModel.NavigationOrder.ToMainActivity -> {
+                    val mainActivityIntent = Intent(this, MainActivity::class.java)
+                    startActivity(mainActivityIntent)
+                    finish()
+                }
+            }
+        }
+
         setupGoogleSignIn()
 
-        if (FirebaseAuth.getInstance().currentUser != null) {
-            val mainActivityIntent = Intent(this, MainActivity::class.java)
-            startActivity(mainActivityIntent)
-            finish()
-        }
+
     }
 
     private fun setupGoogleSignIn() {

@@ -1,13 +1,10 @@
 package com.fadel.go4lunch.ui.detail
 
-import android.content.Intent
 import android.content.res.ColorStateList
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -41,41 +38,30 @@ class DetailFragment : Fragment() {
         val adapter = WorkmatesAdapter()
         vb.detailRecyclerView.adapter = adapter
 
-        vm.getViewStateLiveData().observe(this.viewLifecycleOwner) { restaurantDetail ->
+        vm.getViewStateLiveData().observe(viewLifecycleOwner) { restaurantDetail ->
             vb.detailRestaurantAddress.text = restaurantDetail.address
             vb.detailRestaurantName.text = restaurantDetail.name
             Glide.with(vb.detailPicture)
                 .load(restaurantDetail.imageUrl.toUri())
                 .into(vb.detailPicture)
 
+            vb.choseRestaurantButton.backgroundTintList = ColorStateList.valueOf(requireContext().resources.getColor(restaurantDetail.buttonChoiceColor))
+
             adapter.submitList(restaurantDetail.workmatesInterested)
-        }
 
-        vb.detailCallButton.setOnClickListener {
-            ContextCompat.startActivity(
-                this.requireContext(),
-                Intent(Intent.ACTION_DIAL).apply {
-                    data = Uri.parse("tel:${restaurantDetail.phoneNumber}")
-                },
-                null
-            )
-        }
-
-        vb.detailWebIcon.setOnClickListener {
-            ContextCompat.startActivity(
-                this.requireContext(),
-                Intent(Intent.ACTION_VIEW, Uri.parse(restaurantDetail.website)),
-                null
-            )
-        }
-
-        vb.choseRestaurantButton.apply {
-            backgroundTintList = ColorStateList.valueOf(restaurantDetail.buttonChoiceColor)
-            setOnClickListener {
-                vm.onRestaurantChooseClicked()
+            vb.detailWebIcon.setOnClickListener {
+                restaurantDetail.onWebsiteClicked.invoke()
+            }
+            vb.detailCallButton.setOnClickListener {
+                restaurantDetail.onPhoneClicked.invoke()
+            }
+            vb.choseRestaurantButton.setOnClickListener {
+                restaurantDetail.onRestaurantChooseClicked.invoke()
             }
         }
+
     }
+
 
     companion object {
         const val KEY_PLACE_ID = "KEY_PLACE_ID"

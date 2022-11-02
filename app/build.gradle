@@ -112,6 +112,13 @@ dependencies {
     //Glide
     implementation 'com.github.bumptech.glide:glide:4.13.0'
 
+    //MAPBOX
+    implementation 'com.mapbox.maps:android:10.9.0'
+    implementation "com.mapbox.search:autofill:1.0.0-beta.39"
+    implementation "com.mapbox.search:offline:1.0.0-beta.39"
+    implementation "com.mapbox.search:mapbox-search-android:1.0.0-beta.39"
+    implementation "com.mapbox.search:mapbox-search-android-ui:1.0.0-beta.39"
+
     //TESTS
     testImplementation 'junit:junit:4.13.2' // Assertions... and stuff
     testImplementation 'androidx.arch.core:core-testing:2.1.0' // LiveData tools for Unit Testing
@@ -119,4 +126,5 @@ dependencies {
     testImplementation "io.mockk:mockk:1.12.1"
 
     testImplementation 'com.willowtreeapps.assertk:assertk-jvm:0.25'
+
 }
