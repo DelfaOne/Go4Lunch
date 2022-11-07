@@ -1,12 +1,14 @@
 package com.fadel.go4lunch.data.repository.location
 
 import android.annotation.SuppressLint
+import android.location.Location
 import android.os.Looper
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,8 +19,13 @@ class LocationRepository @Inject constructor(
 ){
 
     @SuppressLint("MissingPermission")
-    fun getLocationFlow() = callbackFlow {
+    fun getLocationFlow(): Flow<Location> = callbackFlow {
         // A new Flow is created. This code executes in a coroutine!
+        val lastLocation = fusedLocationProviderClient.lastLocation.result
+
+        if (lastLocation != null) {
+            trySend(lastLocation)
+        }
 
         // 1. Create callback and add elements into the flow
         val callback = object : LocationCallback() {

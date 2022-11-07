@@ -1,4 +1,4 @@
-package com.fadel.go4lunch.ui.workmates.entity
+package com.fadel.go4lunch.domain.workmates.entity
 
 data class UserEntity(
     val uid: String,

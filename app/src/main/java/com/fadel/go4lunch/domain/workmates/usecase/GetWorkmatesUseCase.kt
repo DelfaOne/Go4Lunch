@@ -3,7 +3,7 @@ package com.fadel.go4lunch.domain.workmates.usecase
 import com.fadel.go4lunch.data.UserData
 import com.fadel.go4lunch.data.repository.UserRepository
 import com.fadel.go4lunch.data.usecase.GetLoggedUserUseCase
-import com.fadel.go4lunch.ui.workmates.entity.UserEntity
+import com.fadel.go4lunch.domain.workmates.entity.UserEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject

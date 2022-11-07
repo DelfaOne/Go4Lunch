@@ -1,7 +1,7 @@
 package com.fadel.go4lunch.ui.workmates
 
 import com.fadel.go4lunch.R
-import com.fadel.go4lunch.ui.workmates.entity.UserEntity
+import com.fadel.go4lunch.domain.workmates.entity.UserEntity
 import com.fadel.go4lunch.utils.ResourceUtil
 import javax.inject.Inject
 

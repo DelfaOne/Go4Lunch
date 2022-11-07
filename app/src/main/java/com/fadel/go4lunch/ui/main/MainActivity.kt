@@ -109,11 +109,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun setupAutofillAddress() {
-        val addressAutofill =
+//        val addressAutofill =
     }
 
     private fun logout() {
-        FirebaseAuth.getInstance().signOut();
+        FirebaseAuth.getInstance().signOut()
     }
 
 }
