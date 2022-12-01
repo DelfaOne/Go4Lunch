@@ -4,8 +4,6 @@ import com.fadel.go4lunch.BuildConfig
 import com.fadel.go4lunch.data.datasource.AutocompleteWebDataSource
 import com.fadel.go4lunch.domain.autocomplete.AutocompleteEntity
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -33,7 +31,7 @@ class AutocompleteRepository @Inject constructor(
         response.predictions.mapNotNull {
             AutocompleteEntity(
                 label = it.description ?: return@mapNotNull null,
-                placeId = it.placeId,
+                placeId = it.placeId ?: return@mapNotNull null,
             )
         }.takeIf {
             it.isNotEmpty()

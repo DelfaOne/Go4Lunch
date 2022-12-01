@@ -2,6 +2,7 @@ package com.fadel.go4lunch.ui.main
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
@@ -51,8 +52,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val searchView = menu?.findItem(R.id.search)?.actionView as SearchView
         searchView.apply {
-            maxWidth = Int.MAX_VALUE
-            searchView.setBackgroundColor(Color.TRANSPARENT)
+            maxWidth = Int.MAX_VALUE // TODO FADEL Necessary ?
+            searchView.setBackgroundColor(Color.TRANSPARENT) // TODO FADEL Necessary ?
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     return false
@@ -126,6 +127,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 userEmail.text = it.email
                 avatar.setImageURI(it.uriPhotoUrl)
             }
+        }
+        vm.searchResults.observe(this) {
+            Log.d("Nino", "MainActivity.searchResults.observe() called with $it")
         }
     }
 

@@ -3,21 +3,19 @@ package com.fadel.go4lunch.ui.main
 import android.Manifest
 import android.app.Application
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.fadel.go4lunch.data.PermissionRepository
 import com.fadel.go4lunch.data.usecase.GetLoggedUserUseCase
 import com.fadel.go4lunch.domain.autocomplete.GetAutocompleteUseCase
+import com.fadel.go4lunch.ui.main.model.MainAutocompleteViewState
 import com.fadel.go4lunch.ui.main.model.User
 import com.fadel.go4lunch.utils.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,6 +40,26 @@ class MainViewModel @Inject constructor(
             .flowOn(dispatcherProvider.ioDispatcher)
             .asLiveData()
 
+    private val userSearch = MutableLiveData<String>()
+    val searchResults: LiveData<List<MainAutocompleteViewState>> =
+        userSearch.switchMap { searchText ->
+            Log.d(
+                "Nino",
+                "MainViewModel.userSearch.switchMap() called with: searchText = $searchText"
+            )
+            liveData(dispatcherProvider.ioDispatcher) {
+                emit(
+                    getAutocompleteUseCase.invoke(searchText).map { entity ->
+                        MainAutocompleteViewState(
+                            placeId = entity.placeId,
+                        )
+                    }.also {
+                        Log.d("Nino", "MainViewModel.map.emitted() $it")
+                    }
+                )
+            }
+        }
+
     fun onResume() {
         val grantedPermissions = getPermissionList().filter { permission ->
             ContextCompat.checkSelfPermission(
@@ -57,8 +75,9 @@ class MainViewModel @Inject constructor(
         listOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
 
     fun onEditSearchChange(searchText: String) {
-        viewModelScope.launch(dispatcherProvider.ioDispatcher) {
-            getAutocompleteUseCase.invoke(searchText)
+        Log.d("Nino", "MainViewModel.onEditSearchChange() called with: searchText = $searchText")
+        if (searchText.isNotBlank()) {
+            userSearch.value = searchText
         }
     }
 }

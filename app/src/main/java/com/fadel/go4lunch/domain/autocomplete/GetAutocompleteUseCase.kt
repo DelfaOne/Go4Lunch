@@ -1,27 +1,25 @@
 package com.fadel.go4lunch.domain.autocomplete
 
-import android.location.Location
 import com.fadel.go4lunch.data.repository.AutocompleteRepository
 import com.fadel.go4lunch.data.repository.location.LocationRepository
+import com.fadel.go4lunch.domain.location.GetDefaultLocationUseCase
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.seconds
 
 @Singleton
 class GetAutocompleteUseCase @Inject constructor(
+    private val getDefaultLocationUseCase: GetDefaultLocationUseCase,
     private val autocompleteRepository: AutocompleteRepository,
     private val locationRepository: LocationRepository,
 ) {
-    suspend fun invoke(userInput: String): List<AutocompleteEntity>? {
-        val location = locationRepository.getLocationFlow().first()
-        return autocompleteRepository.getAutocomplete(userInput, "$location")
+    suspend fun invoke(userInput: String): List<AutocompleteEntity> {
+        val location = withTimeoutOrNull(2.seconds) {
+            locationRepository.getLocationFlow().first()
+        } ?: getDefaultLocationUseCase.invoke()
 
-    }
-
-    companion object {
-        val defaultLocation = Location("default").apply {
-            latitude = 50.63676868035896
-            longitude = 3.0700331845533104
-        }
+        return autocompleteRepository.getAutocomplete(userInput, "$location") ?: emptyList()
     }
 }

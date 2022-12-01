@@ -34,13 +34,6 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/placesList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
             <FrameLayout
                 android:id="@+id/main_fragment_container"
                 android:layout_width="0dp"
@@ -49,6 +42,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/placesList"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 
             <com.google.android.material.bottomnavigation.BottomNavigationView

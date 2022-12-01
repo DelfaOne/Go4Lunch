@@ -10,6 +10,7 @@ import com.google.android.gms.location.LocationResult
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,13 +19,22 @@ class LocationRepository @Inject constructor(
     private val fusedLocationProviderClient: FusedLocationProviderClient
 ){
 
+    private var lastKnownLocation : Location? = null
+
     @SuppressLint("MissingPermission")
     fun getLocationFlow(): Flow<Location> = callbackFlow {
         // A new Flow is created. This code executes in a coroutine!
-        val lastLocation = fusedLocationProviderClient.lastLocation.result
+        val lastLocationTask = fusedLocationProviderClient.lastLocation
 
-        if (lastLocation != null) {
-            trySend(lastLocation)
+        if (lastLocationTask.isSuccessful) {
+            val lastLocation = lastLocationTask.result
+            if (lastLocation != null) {
+                trySend(lastLocation)
+            }
+        } else {
+            lastKnownLocation?.let {
+                trySend(it)
+            }
         }
 
         // 1. Create callback and add elements into the flow
@@ -52,5 +62,7 @@ class LocationRepository @Inject constructor(
             // Clean up code goes here
             fusedLocationProviderClient.removeLocationUpdates(callback)
         }
+    }.onEach {
+        lastKnownLocation = it
     }
 }
