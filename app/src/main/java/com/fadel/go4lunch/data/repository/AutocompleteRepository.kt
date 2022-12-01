@@ -27,7 +27,7 @@ class AutocompleteRepository @Inject constructor(
             types = AVAILABLE_TYPES,
             location = location,
             radius = RADIUS,
-            key = BuildConfig.PLACES_KEY
+            key = BuildConfig.AUTOCOMPLETE_KEY
         )
 
         response.predictions.mapNotNull {

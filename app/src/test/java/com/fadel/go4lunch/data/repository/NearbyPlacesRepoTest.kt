@@ -4,6 +4,7 @@ import com.fadel.go4lunch.data.datasource.NearbyPlacesWebDataSource
 import com.fadel.go4lunch.data.pojo.nearbyplace.NearbyResponse
 import com.fadel.go4lunch.data.pojo.nearbyplace.NearbyResponses
 import com.fadel.go4lunch.data.repository.location.LocationEntity
+import com.fadel.go4lunch.data.repository.location.LocationUtils
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.confirmVerified

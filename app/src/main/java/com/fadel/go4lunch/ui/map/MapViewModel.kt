@@ -1,13 +1,14 @@
 package com.fadel.go4lunch.ui.map
 
 import android.Manifest
-import android.location.Location
 import androidx.lifecycle.*
 import com.fadel.go4lunch.BuildConfig
 import com.fadel.go4lunch.data.PermissionRepository
-import com.fadel.go4lunch.data.repository.location.LocationRepository
 import com.fadel.go4lunch.data.repository.NearbyPlacesRepo
 import com.fadel.go4lunch.data.repository.location.LocationEntity
+import com.fadel.go4lunch.data.repository.location.LocationRepository
+import com.fadel.go4lunch.domain.autocomplete.AutocompleteEntity
+import com.fadel.go4lunch.domain.autocomplete.GetAutocompleteUseCase
 import com.fadel.go4lunch.utils.DispatcherProvider
 import com.fadel.go4lunch.utils.SingleLiveEvent
 import com.google.android.gms.maps.model.LatLng
@@ -22,39 +23,42 @@ class MapViewModel @Inject constructor(
     private val nearbyPlacesRepository: NearbyPlacesRepo,
     private val locationRepository: LocationRepository,
     private val permissionRepository: PermissionRepository,
-    dispatcherProvider: DispatcherProvider,
+    dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
-
     private val currentCameraPositionMutableLiveData = MutableLiveData<LatLng>()
 
-    val restaurantListLiveData: LiveData<List<MapUiModel>> = currentCameraPositionMutableLiveData.switchMap {
-        liveData(dispatcherProvider.ioDispatcher) {
-            val results = nearbyPlacesRepository.getNearbyResults(
-                LocationEntity(it.latitude, it.longitude),
-                "1500",
-                "restaurant",
-                BuildConfig.GMP_KEY
-            )
+    val viewActionSingleLiveEvent = SingleLiveEvent<MapViewActions>()
 
-            results?.let {
-                emit(
-                    results.mapNotNull {
-                        MapUiModel(
-                            id = it.placeId ?: return@mapNotNull null,
-                            name = it.name ?: return@mapNotNull null,
-                            isTested = false,
-                            latLng = LatLng(
-                                it.geometry?.location?.lat ?: return@mapNotNull null,
-                                it.geometry.location.lng ?: return@mapNotNull null
-                            )
-                        )
-                    }
+    private val _autocompleteListLiveData = MutableLiveData<List<AutocompleteEntity>>()
+    val autocompleteListLiveData: LiveData<List<AutocompleteEntity>> = _autocompleteListLiveData
+
+    val restaurantListLiveData: LiveData<List<MapUiModel>> =
+        currentCameraPositionMutableLiveData.switchMap {
+            liveData(dispatcherProvider.ioDispatcher) {
+                val results = nearbyPlacesRepository.getNearbyResults(
+                    LocationEntity(it.latitude, it.longitude),
+                    "1500",
+                    "restaurant",
+                    BuildConfig.GMP_KEY
                 )
+
+                results?.let {
+                    emit(
+                        results.mapNotNull {
+                            MapUiModel(
+                                id = it.placeId ?: return@mapNotNull null,
+                                name = it.name ?: return@mapNotNull null,
+                                isTested = false,
+                                latLng = LatLng(
+                                    it.geometry?.location?.lat ?: return@mapNotNull null,
+                                    it.geometry.location.lng ?: return@mapNotNull null
+                                )
+                            )
+                        }
+                    )
+                }
             }
         }
-    }
-
-    val viewActionSingleLiveEvent = SingleLiveEvent<MapViewActions>()
 
     init {
 

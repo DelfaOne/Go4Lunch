@@ -1,4 +1,4 @@
-package com.fadel.go4lunch.data.repository
+package com.fadel.go4lunch.data.repository.location
 
 import android.location.Location
 import com.fadel.go4lunch.data.repository.location.LocationEntity

@@ -1,10 +1,13 @@
 package com.fadel.go4lunch.ui.main
 
+import android.graphics.Color
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
@@ -29,7 +32,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
 
         setupView(savedInstanceState)
-        initializeUI()
         setupObservers()
 
         val toggle = ActionBarDrawerToggle(
@@ -42,6 +44,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding.mainDrawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         binding.mainDrawerNavigationView.setNavigationItemSelectedListener(this)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.search_menu, menu)
+
+        val searchView = menu?.findItem(R.id.search)?.actionView as SearchView
+        searchView.apply {
+            maxWidth = Int.MAX_VALUE
+            searchView.setBackgroundColor(Color.TRANSPARENT)
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    if (newText != null) {
+                        vm.onEditSearchChange(newText)
+                    }
+                    return false
+                }
+
+            })
+        }
+        return true
     }
 
     override fun onBackPressed() {
@@ -79,37 +105,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun setupView(savedInstanceState: Bundle?) {
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        headerBinding = MainNavigationHeaderBinding.bind(binding.mainDrawerNavigationView.getHeaderView(0))
+        headerBinding =
+            MainNavigationHeaderBinding.bind(binding.mainDrawerNavigationView.getHeaderView(0))
         setSupportActionBar(binding.mainToolbar)
 
         if (savedInstanceState == null) {
             navigateTo(MapFragment())
         }
 
-        binding.mainBottomNavigationView.setOnItemSelectedListener  { item ->
+        binding.mainBottomNavigationView.setOnItemSelectedListener { item ->
             switchScreen(item.itemId)
             true
         }
     }
 
-    private fun initializeUI() {
-       /*  binding.mainDrawerNavigationView.getHeaderView(0) {
-             logout()
-         }*/
-    }
-
     private fun setupObservers() {
-        vm.pendingTransactionCount.observe(this) {
+        vm.userInfo.observe(this) {
             with(headerBinding) {
                 userName.text = it.name
                 userEmail.text = it.email
                 avatar.setImageURI(it.uriPhotoUrl)
             }
         }
-    }
-
-    private fun setupAutofillAddress() {
-//        val addressAutofill =
     }
 
     private fun logout() {

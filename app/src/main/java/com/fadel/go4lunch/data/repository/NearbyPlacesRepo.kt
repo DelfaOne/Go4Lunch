@@ -6,6 +6,7 @@ import com.fadel.go4lunch.data.pojo.nearbyplace.NearbyResponse
 import com.fadel.go4lunch.data.pojo.nearbyplace.NearbyResponses
 import com.fadel.go4lunch.data.pojo.nearbyplace.details.DetailResponse
 import com.fadel.go4lunch.data.repository.location.LocationEntity
+import com.fadel.go4lunch.data.repository.location.LocationUtils
 import javax.inject.Inject
 import javax.inject.Singleton
 
